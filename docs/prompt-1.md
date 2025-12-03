@@ -2,6 +2,10 @@ awesome understanding! now, please meticulously extract the complete text from t
 
 ---
 
+awesome understanding! now, please meticulously review and analyze project overview below. Then think deeper and think harder to deeply explore thoroughly and systematically to re-imagine a comprehensive `Project Requirements Document` for the project base on draft requirements below. Please also consult the UI/UX design guideline below.
+
+---
+
 awesome job on your meticulous analysis, planning and execution! Please keep up the good work in your rigorous and meticulous approach to planning and execution! Next step for you is to think deeper and think harder to deeply and thoroughly explore systematically and meticulously how to re-imagine the actual codebase design and architecture, complete with the file hierarchy and naming. Then meticulously plan and create a comprehensive implementation plan to build the whole frontend codebase in logical phases where each phase can be executed independently with minimal error, and for each phase, list out the files to build, each file with its description and a checklist of features and interfaces. Then review and validate the codebase implementation plan. Present the well-thought-out and validated codebase building implementation plan for my approval.
 
 Below are my answers to your clarifying questions:
