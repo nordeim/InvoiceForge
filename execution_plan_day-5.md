@@ -762,3 +762,1155 @@ export const unitTypeOptions: Array<{ value: UnitType; label: string }> = [
   { value: 'fixed', label: 'Fixed' },
 ]
 ```
+
+---
+
+
+Phase 3: Client Selector Component
+3.1 Phase Objectives
+Create searchable client selector combobox
+Display selected client info
+Allow clearing selection
+3.2 Phase Checklist
+
+```markdown
+## Phase 3 Checklist
+- [ ] Create ClientSelector component using Command + Popover
+- [ ] Implement search functionality
+- [ ] Show client name and company in dropdown
+- [ ] Display selected client
+- [ ] Allow clearing selection
+```
+
+3.3 Implementation
+Step 3.3.1: Create ClientSelector Component
+
+```tsx
+// app/frontend/components/invoices/ClientSelector.tsx
+import * as React from "react"
+import { Check, ChevronsUpDown, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { ClientAvatar } from "@/components/clients/ClientAvatar"
+import type { Client } from "@/lib/types"
+
+interface ClientSelectorProps {
+  clients: Client[]
+  selectedClientId: string | null
+  onSelect: (clientId: string | null) => void
+  placeholder?: string
+  disabled?: boolean
+}
+
+/**
+ * ClientSelector — Searchable combobox for selecting a client
+ * 
+ * Features:
+ * - Search by name, company, or email
+ * - Shows avatar, name, and company in dropdown
+ * - Displays selected client info
+ * - Clear button to deselect
+ */
+export function ClientSelector({
+  clients,
+  selectedClientId,
+  onSelect,
+  placeholder = "Select a client...",
+  disabled = false,
+}: ClientSelectorProps) {
+  const [open, setOpen] = React.useState(false)
+  const [search, setSearch] = React.useState("")
+
+  // Find selected client
+  const selectedClient = clients.find(c => c.id === selectedClientId)
+
+  // Filter clients based on search
+  const filteredClients = React.useMemo(() => {
+    if (!search) return clients
+    
+    const query = search.toLowerCase()
+    return clients.filter(client =>
+      client.name.toLowerCase().includes(query) ||
+      client.company?.toLowerCase().includes(query) ||
+      client.email.toLowerCase().includes(query)
+    )
+  }, [clients, search])
+
+  const handleSelect = (clientId: string) => {
+    onSelect(clientId === selectedClientId ? null : clientId)
+    setOpen(false)
+    setSearch("")
+  }
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onSelect(null)
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          aria-label="Select client"
+          disabled={disabled}
+          className={cn(
+            "w-full justify-between h-auto min-h-10 py-2",
+            !selectedClient && "text-slate-400"
+          )}
+        >
+          {selectedClient ? (
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <ClientAvatar name={selectedClient.name} size="sm" />
+              <div className="flex flex-col items-start min-w-0">
+                <span className="font-medium text-slate-900 dark:text-slate-100 truncate">
+                  {selectedClient.name}
+                </span>
+                {selectedClient.company && (
+                  <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    {selectedClient.company}
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <span>{placeholder}</span>
+          )}
+          
+          <div className="flex items-center gap-1 flex-shrink-0">
+            {selectedClient && (
+              <button
+                onClick={handleClear}
+                className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
+                aria-label="Clear selection"
+              >
+                <X className="h-4 w-4 text-slate-400" />
+              </button>
+            )}
+            <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+          </div>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[400px] p-0" align="start">
+        <Command shouldFilter={false}>
+          <CommandInput 
+            placeholder="Search clients..." 
+            value={search}
+            onValueChange={setSearch}
+          />
+          <CommandList>
+            <CommandEmpty>No clients found.</CommandEmpty>
+            <CommandGroup>
+              {filteredClients.map((client) => (
+                <CommandItem
+                  key={client.id}
+                  value={client.id}
+                  onSelect={() => handleSelect(client.id)}
+                  className="flex items-center gap-3 py-2"
+                >
+                  <ClientAvatar name={client.name} size="sm" />
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <span className="font-medium truncate">
+                      {client.name}
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                      {client.company || client.email}
+                    </span>
+                  </div>
+                  <Check
+                    className={cn(
+                      "h-4 w-4 flex-shrink-0",
+                      selectedClientId === client.id ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+```
+
+---
+
+Phase 4: Date Picker Component
+4.1 Phase Objectives
+Create reusable date picker
+Use Popover + Calendar
+Format dates for display
+4.2 Phase Checklist
+
+```markdown
+## Phase 4 Checklist
+- [ ] Create DatePicker component
+- [ ] Format selected date for display
+- [ ] Allow clearing date
+- [ ] Support disabled state
+```
+
+4.3 Implementation
+Step 4.3.1: Create DatePicker Component
+
+```tsx
+// app/frontend/components/invoices/DatePicker.tsx
+import * as React from "react"
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+interface DatePickerProps {
+  date: Date | undefined
+  onSelect: (date: Date | undefined) => void
+  placeholder?: string
+  disabled?: boolean
+  className?: string
+}
+
+/**
+ * DatePicker — Calendar date selector
+ * 
+ * Features:
+ * - Opens calendar in popover
+ * - Displays formatted date
+ * - Supports placeholder when empty
+ */
+export function DatePicker({
+  date,
+  onSelect,
+  placeholder = "Select date",
+  disabled = false,
+  className,
+}: DatePickerProps) {
+  const [open, setOpen] = React.useState(false)
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    onSelect(selectedDate)
+    setOpen(false)
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          disabled={disabled}
+          className={cn(
+            "w-full justify-start text-left font-normal",
+            !date && "text-slate-400",
+            className
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, "dd MMM yyyy") : placeholder}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={handleSelect}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  )
+}
+```
+
+---
+
+Phase 5: Line Item Components
+5.1 Phase Objectives
+Create LineItemRow for regular items
+Create SectionHeaderRow for sections
+Create DiscountRow for discounts
+Support editing all fields
+5.2 Phase Checklist
+
+```markdown
+## Phase 5 Checklist
+- [ ] Create LineItemRow component
+- [ ] Create SectionHeaderRow component
+- [ ] Create DiscountRow component
+- [ ] Handle field changes
+- [ ] Handle delete action
+- [ ] Calculate and display line totals
+```
+
+5.3 Implementation
+Step 5.3.1: Create LineItemRow Component
+
+```tsx
+// app/frontend/components/invoices/LineItemRow.tsx
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { GripVertical, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { formatCurrency } from "@/lib/utils"
+import { calculateLineTotal, unitTypeOptions } from "@/lib/invoice-utils"
+import type { LineItem, UnitType } from "@/lib/types"
+
+interface LineItemRowProps {
+  item: LineItem
+  onChange: (item: LineItem) => void
+  onDelete: () => void
+  disabled?: boolean
+}
+
+/**
+ * LineItemRow — Editable row for regular line items
+ * 
+ * Layout:
+ * - Drag handle | Description | Quantity | Unit Type | Unit Price | Line Total | Delete
+ */
+export function LineItemRow({
+  item,
+  onChange,
+  onDelete,
+  disabled = false,
+}: LineItemRowProps) {
+  const lineTotal = calculateLineTotal(item)
+
+  const handleChange = <K extends keyof LineItem>(field: K, value: LineItem[K]) => {
+    onChange({ ...item, [field]: value })
+  }
+
+  return (
+    <div className={cn(
+      "flex items-center gap-2 p-3 rounded-lg",
+      "bg-slate-50 dark:bg-slate-800/50",
+      "border border-slate-200 dark:border-slate-700"
+    )}>
+      {/* Drag Handle */}
+      <div className="flex-shrink-0 cursor-grab text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        <GripVertical className="h-5 w-5" />
+      </div>
+
+      {/* Description */}
+      <div className="flex-1 min-w-0">
+        <Input
+          value={item.description}
+          onChange={(e) => handleChange('description', e.target.value)}
+          placeholder="Item description"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900"
+        />
+      </div>
+
+      {/* Quantity */}
+      <div className="w-20 flex-shrink-0">
+        <Input
+          type="number"
+          min="0"
+          step="0.5"
+          value={item.quantity ?? ''}
+          onChange={(e) => handleChange('quantity', parseFloat(e.target.value) || 0)}
+          placeholder="Qty"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900 text-right"
+        />
+      </div>
+
+      {/* Unit Type */}
+      <div className="w-24 flex-shrink-0">
+        <Select
+          value={item.unitType}
+          onValueChange={(value) => handleChange('unitType', value as UnitType)}
+          disabled={disabled}
+        >
+          <SelectTrigger className="bg-white dark:bg-slate-900">
+            <SelectValue placeholder="Unit" />
+          </SelectTrigger>
+          <SelectContent>
+            {unitTypeOptions.map(option => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Unit Price */}
+      <div className="w-28 flex-shrink-0">
+        <Input
+          type="number"
+          min="0"
+          step="0.01"
+          value={item.unitPrice ?? ''}
+          onChange={(e) => handleChange('unitPrice', parseFloat(e.target.value) || 0)}
+          placeholder="Price"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900 text-right"
+        />
+      </div>
+
+      {/* Line Total */}
+      <div className="w-28 flex-shrink-0 text-right">
+        <span className="font-mono text-sm font-medium text-slate-900 dark:text-slate-50">
+          {formatCurrency(lineTotal)}
+        </span>
+      </div>
+
+      {/* Delete Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onDelete}
+        disabled={disabled}
+        className="flex-shrink-0 h-8 w-8 text-slate-400 hover:text-rose-500"
+        aria-label="Remove item"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+  )
+}
+```
+
+Step 5.3.2: Create SectionHeaderRow Component
+
+```tsx
+// app/frontend/components/invoices/SectionHeaderRow.tsx
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { GripVertical, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+import type { LineItem } from "@/lib/types"
+
+interface SectionHeaderRowProps {
+  item: LineItem
+  onChange: (item: LineItem) => void
+  onDelete: () => void
+  disabled?: boolean
+}
+
+/**
+ * SectionHeaderRow — Editable row for section headers
+ * 
+ * Layout:
+ * - Drag handle | Section title spanning full width | Delete
+ */
+export function SectionHeaderRow({
+  item,
+  onChange,
+  onDelete,
+  disabled = false,
+}: SectionHeaderRowProps) {
+  const handleChange = (description: string) => {
+    onChange({ ...item, description })
+  }
+
+  return (
+    <div className={cn(
+      "flex items-center gap-2 p-3 rounded-lg",
+      "bg-slate-100 dark:bg-slate-800",
+      "border border-slate-300 dark:border-slate-600"
+    )}>
+      {/* Drag Handle */}
+      <div className="flex-shrink-0 cursor-grab text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        <GripVertical className="h-5 w-5" />
+      </div>
+
+      {/* Section Label */}
+      <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400 flex-shrink-0">
+        Section:
+      </span>
+
+      {/* Section Title */}
+      <div className="flex-1 min-w-0">
+        <Input
+          value={item.description}
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder="Section title"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900 font-semibold"
+        />
+      </div>
+
+      {/* Delete Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onDelete}
+        disabled={disabled}
+        className="flex-shrink-0 h-8 w-8 text-slate-400 hover:text-rose-500"
+        aria-label="Remove section"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+  )
+}
+```
+
+Step 5.3.3: Create DiscountRow Component
+
+```tsx
+// app/frontend/components/invoices/DiscountRow.tsx
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { GripVertical, X } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { formatCurrency } from "@/lib/utils"
+import type { LineItem } from "@/lib/types"
+
+interface DiscountRowProps {
+  item: LineItem
+  onChange: (item: LineItem) => void
+  onDelete: () => void
+  disabled?: boolean
+}
+
+/**
+ * DiscountRow — Editable row for discount line items
+ * 
+ * Layout:
+ * - Drag handle | Description | Amount (always negative display) | Delete
+ */
+export function DiscountRow({
+  item,
+  onChange,
+  onDelete,
+  disabled = false,
+}: DiscountRowProps) {
+  const discountAmount = Math.abs(item.unitPrice ?? 0)
+
+  const handleDescriptionChange = (description: string) => {
+    onChange({ ...item, description })
+  }
+
+  const handleAmountChange = (value: string) => {
+    const amount = parseFloat(value) || 0
+    // Store as negative value
+    onChange({ ...item, unitPrice: -Math.abs(amount) })
+  }
+
+  return (
+    <div className={cn(
+      "flex items-center gap-2 p-3 rounded-lg",
+      "bg-rose-50 dark:bg-rose-950/30",
+      "border border-rose-200 dark:border-rose-800"
+    )}>
+      {/* Drag Handle */}
+      <div className="flex-shrink-0 cursor-grab text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+        <GripVertical className="h-5 w-5" />
+      </div>
+
+      {/* Discount Label */}
+      <span className="text-xs font-medium uppercase tracking-wide text-rose-600 dark:text-rose-400 flex-shrink-0">
+        Discount:
+      </span>
+
+      {/* Description */}
+      <div className="flex-1 min-w-0">
+        <Input
+          value={item.description}
+          onChange={(e) => handleDescriptionChange(e.target.value)}
+          placeholder="Discount description"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900"
+        />
+      </div>
+
+      {/* Amount Input */}
+      <div className="w-28 flex-shrink-0">
+        <Input
+          type="number"
+          min="0"
+          step="0.01"
+          value={discountAmount || ''}
+          onChange={(e) => handleAmountChange(e.target.value)}
+          placeholder="Amount"
+          disabled={disabled}
+          className="bg-white dark:bg-slate-900 text-right"
+        />
+      </div>
+
+      {/* Discount Display (negative) */}
+      <div className="w-28 flex-shrink-0 text-right">
+        <span className="font-mono text-sm font-medium text-rose-600 dark:text-rose-400">
+          -{formatCurrency(discountAmount)}
+        </span>
+      </div>
+
+      {/* Delete Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onDelete}
+        disabled={disabled}
+        className="flex-shrink-0 h-8 w-8 text-slate-400 hover:text-rose-500"
+        aria-label="Remove discount"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+  )
+}
+```
+
+---
+
+Phase 6: Line Items Editor Container
+6.1 Phase Objectives
+Create container for all line items
+Manage adding/removing/updating items
+Handle position ordering
+Render correct row type per item
+6.2 Phase Checklist
+
+```markdown
+## Phase 6 Checklist
+- [ ] Create LineItemsEditor component
+- [ ] Render correct component per item type
+- [ ] Handle add item/section/discount
+- [ ] Handle delete item
+- [ ] Handle update item
+- [ ] Maintain position ordering
+- [ ] Add action buttons at bottom
+```
+
+6.3 Implementation
+Step 6.3.1: Create LineItemsEditor Component
+
+```tsx
+// app/frontend/components/invoices/LineItemsEditor.tsx
+import { Button } from "@/components/ui/button"
+import { LineItemRow } from "./LineItemRow"
+import { SectionHeaderRow } from "./SectionHeaderRow"
+import { DiscountRow } from "./DiscountRow"
+import { Plus, FolderPlus, Percent } from "lucide-react"
+import { 
+  createBlankItem, 
+  createSectionHeader, 
+  createDiscountLine 
+} from "@/lib/invoice-utils"
+import type { LineItem } from "@/lib/types"
+
+interface LineItemsEditorProps {
+  lineItems: LineItem[]
+  onChange: (lineItems: LineItem[]) => void
+  invoiceId?: string
+  disabled?: boolean
+}
+
+/**
+ * LineItemsEditor — Full editor for invoice line items
+ * 
+ * Features:
+ * - Renders correct component for each item type
+ * - Add buttons for items, sections, discounts
+ * - Handles all CRUD operations
+ * - Maintains position ordering
+ */
+export function LineItemsEditor({
+  lineItems,
+  onChange,
+  invoiceId = '',
+  disabled = false,
+}: LineItemsEditorProps) {
+  // Sort by position
+  const sortedItems = [...lineItems].sort((a, b) => a.position - b.position)
+
+  // Get next position number
+  const getNextPosition = () => {
+    if (lineItems.length === 0) return 1
+    return Math.max(...lineItems.map(item => item.position)) + 1
+  }
+
+  // Handle adding a new item
+  const handleAddItem = () => {
+    const newItem = createBlankItem(getNextPosition(), invoiceId)
+    onChange([...lineItems, newItem])
+  }
+
+  // Handle adding a new section
+  const handleAddSection = () => {
+    const newSection = createSectionHeader('', getNextPosition(), invoiceId)
+    onChange([...lineItems, newSection])
+  }
+
+  // Handle adding a new discount
+  const handleAddDiscount = () => {
+    const newDiscount = createDiscountLine('', 0, getNextPosition(), invoiceId)
+    onChange([...lineItems, newDiscount])
+  }
+
+  // Handle updating an item
+  const handleUpdateItem = (updatedItem: LineItem) => {
+    onChange(lineItems.map(item => 
+      item.id === updatedItem.id ? updatedItem : item
+    ))
+  }
+
+  // Handle deleting an item
+  const handleDeleteItem = (itemId: string) => {
+    onChange(lineItems.filter(item => item.id !== itemId))
+  }
+
+  // Render the appropriate component for each item type
+  const renderLineItem = (item: LineItem) => {
+    const commonProps = {
+      key: item.id,
+      item,
+      onChange: handleUpdateItem,
+      onDelete: () => handleDeleteItem(item.id),
+      disabled,
+    }
+
+    switch (item.type) {
+      case 'section':
+        return <SectionHeaderRow {...commonProps} />
+      case 'discount':
+        return <DiscountRow {...commonProps} />
+      case 'item':
+      default:
+        return <LineItemRow {...commonProps} />
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Line Items Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="font-sans text-lg font-semibold text-slate-900 dark:text-slate-50">
+          Line Items
+        </h3>
+      </div>
+
+      {/* Line Items List */}
+      <div className="space-y-2">
+        {sortedItems.length === 0 ? (
+          <EmptyState onAddItem={handleAddItem} />
+        ) : (
+          sortedItems.map(renderLineItem)
+        )}
+      </div>
+
+      {/* Add Buttons */}
+      <div className="flex flex-wrap gap-2 pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddItem}
+          disabled={disabled}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add Item
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddSection}
+          disabled={disabled}
+        >
+          <FolderPlus className="h-4 w-4 mr-2" />
+          Add Section
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddDiscount}
+          disabled={disabled}
+        >
+          <Percent className="h-4 w-4 mr-2" />
+          Add Discount
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * EmptyState — Displayed when there are no line items
+ */
+function EmptyState({ onAddItem }: { onAddItem: () => void }) {
+  return (
+    <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-8 text-center">
+      <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+        No line items yet. Add your first item to get started.
+      </p>
+      <Button variant="outline" onClick={onAddItem}>
+        <Plus className="h-4 w-4 mr-2" />
+        Add First Item
+      </Button>
+    </div>
+  )
+}
+```
+
+---
+
+Phase 7: Invoice Summary Component
+7.1 Phase Objectives
+Display subtotal, discount, and total
+Right-aligned layout
+Proper typography per v4.2
+7.2 Phase Checklist
+
+```markdown
+## Phase 7 Checklist
+- [ ] Create InvoiceSummary component
+- [ ] Show subtotal
+- [ ] Show total discount (if any)
+- [ ] Show final total (prominent)
+- [ ] Right-align values
+- [ ] Use monospace font for numbers
+```
+
+7.3 Implementation
+Step 7.3.1: Create InvoiceSummary Component
+
+```tsx
+// app/frontend/components/invoices/InvoiceSummary.tsx
+import { cn } from "@/lib/utils"
+import { formatCurrency } from "@/lib/utils"
+import { Separator } from "@/components/ui/separator"
+
+interface InvoiceSummaryProps {
+  subtotal: number
+  totalDiscount: number
+  total: number
+  className?: string
+}
+
+/**
+ * InvoiceSummary — Displays invoice totals
+ * 
+ * Layout (v4.2):
+ * - Right-aligned values
+ * - Subtotal, Discount (if any), Total
+ * - Total is prominent with larger font
+ */
+export function InvoiceSummary({
+  subtotal,
+  totalDiscount,
+  total,
+  className,
+}: InvoiceSummaryProps) {
+  return (
+    <div className={cn("flex justify-end", className)}>
+      <div className="w-full max-w-xs space-y-2">
+        {/* Subtotal */}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
+          <span className="font-mono font-medium text-slate-900 dark:text-slate-50">
+            {formatCurrency(subtotal)}
+          </span>
+        </div>
+
+        {/* Discount (only show if there is one) */}
+        {totalDiscount > 0 && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-600 dark:text-slate-400">Discount</span>
+            <span className="font-mono font-medium text-rose-600 dark:text-rose-400">
+              -{formatCurrency(totalDiscount)}
+            </span>
+          </div>
+        )}
+
+        <Separator className="my-2" />
+
+        {/* Total */}
+        <div className="flex items-center justify-between">
+          <span className="text-base font-semibold text-slate-900 dark:text-slate-50">
+            Total
+          </span>
+          <span className="font-mono text-2xl font-bold text-slate-900 dark:text-slate-50">
+            {formatCurrency(total)}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+Step 7.3.2: Update Invoices Components Index
+
+```ts
+// app/frontend/components/invoices/index.ts
+export { InvoiceFilterTabs, type FilterValue } from './InvoiceFilterTabs'
+export { InvoiceRowActions } from './InvoiceRowActions'
+export { InvoiceTable } from './InvoiceTable'
+export { InvoiceCard } from './InvoiceCard'
+export { InvoiceList } from './InvoiceList'
+export { ClientSelector } from './ClientSelector'
+export { DatePicker } from './DatePicker'
+export { LineItemRow } from './LineItemRow'
+export { SectionHeaderRow } from './SectionHeaderRow'
+export { DiscountRow } from './DiscountRow'
+export { LineItemsEditor } from './LineItemsEditor'
+export { InvoiceSummary } from './InvoiceSummary'
+```
+
+---
+
+Phase 8: Invoice Editor Page
+8.1 Phase Objectives
+Create complete invoice editor page
+Implement sticky header with actions
+Implement form state management
+Handle New vs Edit modes
+Implement sticky footer on mobile
+8.2 Phase Checklist
+
+```markdown
+## Phase 8 Checklist
+- [ ] Create InvoiceEditorPage component
+- [ ] Implement sticky header with back button
+- [ ] Display auto-generated invoice number
+- [ ] Add Save Draft and Save & Send buttons
+- [ ] Wire ClientSelector
+- [ ] Wire DatePickers for issue/due dates
+- [ ] Wire LineItemsEditor
+- [ ] Wire InvoiceSummary with calculated totals
+- [ ] Implement sticky footer on mobile
+- [ ] Handle form submission
+- [ ] Support Edit mode with existing data
+```
+
+8.3 Implementation
+Step 8.3.1: Create Invoice Editor Page
+
+```tsx
+// app/frontend/pages/Invoices/New.tsx
+import { useState, useMemo, useCallback } from "react"
+import { router, Link } from "@inertiajs/react"
+import { AppLayout } from "@/layouts/AppLayout"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { 
+  ClientSelector, 
+  DatePicker, 
+  LineItemsEditor, 
+  InvoiceSummary 
+} from "@/components/invoices"
+import { mockClients } from "@/lib/mock-data"
+import { generateInvoiceNumber, formatCurrency } from "@/lib/utils"
+import { calculateTotals, createBlankItem } from "@/lib/invoice-utils"
+import { ArrowLeft, Save, Send } from "lucide-react"
+import type { LineItem } from "@/lib/types"
+
+/**
+ * New Invoice Page — Full invoice editor
+ * 
+ * Layout (v4.2):
+ * - Sticky header with back button and actions
+ * - Client selector + date pickers
+ * - Line items editor
+ * - Invoice summary (right-aligned)
+ * - Sticky footer on mobile
+ */
+export default function InvoicesNew() {
+  // Generate invoice number
+  const invoiceNumber = useMemo(() => {
+    const year = new Date().getFullYear()
+    const sequence = 3 // Would come from backend in real app
+    return generateInvoiceNumber(year, sequence)
+  }, [])
+
+  // Form state
+  const [clientId, setClientId] = useState<string | null>(null)
+  const [issueDate, setIssueDate] = useState<Date | undefined>(new Date())
+  const [dueDate, setDueDate] = useState<Date | undefined>(() => {
+    const date = new Date()
+    date.setDate(date.getDate() + 30) // Default to 30 days from now
+    return date
+  })
+  const [lineItems, setLineItems] = useState<LineItem[]>([
+    createBlankItem(1, ''),
+  ])
+
+  // Calculate totals
+  const totals = useMemo(() => calculateTotals(lineItems), [lineItems])
+
+  // Find selected client
+  const selectedClient = clientId ? mockClients.find(c => c.id === clientId) : null
+
+  // Handle save
+  const handleSave = useCallback((send: boolean = false) => {
+    const invoiceData = {
+      invoiceNumber,
+      clientId,
+      issueDate: issueDate?.toISOString(),
+      dueDate: dueDate?.toISOString(),
+      lineItems,
+      ...totals,
+      status: send ? 'pending' : 'draft',
+    }
+    
+    console.log('Saving invoice:', invoiceData)
+    
+    // In real app, would POST to server
+    alert(`Invoice ${invoiceNumber} ${send ? 'sent' : 'saved as draft'}!`)
+    
+    // Navigate back to invoices list
+    router.visit('/invoices')
+  }, [invoiceNumber, clientId, issueDate, dueDate, lineItems, totals])
+
+  const handleSaveDraft = () => handleSave(false)
+  const handleSaveAndSend = () => handleSave(true)
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Left: Back + Title */}
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/invoices" aria-label="Back to invoices">
+                  <ArrowLeft className="h-5 w-5" />
+                </Link>
+              </Button>
+              <div>
+                <h1 className="font-display text-xl tracking-tight text-slate-900 dark:text-slate-50">
+                  New Invoice
+                </h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-mono">
+                  #{invoiceNumber}
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Actions (hidden on mobile, shown in footer) */}
+            <div className="hidden sm:flex items-center gap-3">
+              <Button variant="outline" onClick={handleSaveDraft}>
+                <Save className="h-4 w-4 mr-2" />
+                Save Draft
+              </Button>
+              <Button onClick={handleSaveAndSend}>
+                <Send className="h-4 w-4 mr-2" />
+                Save & Send
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-32 sm:pb-8">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm">
+          {/* Client & Dates Section */}
+          <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+            <div className="grid gap-6 sm:grid-cols-3">
+              {/* Client Selector */}
+              <div className="sm:col-span-1">
+                <Label htmlFor="client" className="mb-2 block">
+                  Client <span className="text-rose-500">*</span>
+                </Label>
+                <ClientSelector
+                  clients={mockClients}
+                  selectedClientId={clientId}
+                  onSelect={setClientId}
+                  placeholder="Select client..."
+                />
+              </div>
+
+              {/* Issue Date */}
+              <div>
+                <Label htmlFor="issueDate" className="mb-2 block">
+                  Issue Date
+                </Label>
+                <DatePicker
+                  date={issueDate}
+                  onSelect={setIssueDate}
+                  placeholder="Select date"
+                />
+              </div>
+
+              {/* Due Date */}
+              <div>
+                <Label htmlFor="dueDate" className="mb-2 block">
+                  Due Date
+                </Label>
+                <DatePicker
+                  date={dueDate}
+                  onSelect={setDueDate}
+                  placeholder="Select date"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Line Items Section */}
+          <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+            <LineItemsEditor
+              lineItems={lineItems}
+              onChange={setLineItems}
+            />
+          </div>
+
+          {/* Summary Section */}
+          <div className="p-6">
+            <InvoiceSummary
+              subtotal={totals.subtotal}
+              totalDiscount={totals.totalDiscount}
+              total={totals.total}
+            />
+          </div>
+        </div>
+      </main>
+
+      {/* Sticky Footer (Mobile) */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 shadow-lg">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
+            <p className="font-mono text-lg font-bold text-slate-900 dark:text-slate-50">
+              {formatCurrency(totals.total)}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleSaveDraft}>
+              Save Draft
+            </Button>
+            <Button size="sm" onClick={handleSaveAndSend}>
+              Save & Send
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
