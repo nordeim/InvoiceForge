@@ -1,12 +1,3 @@
-# 📄 Project Requirements Document (v4)
-
-**File Name:** `PRD_v4.md`
-**Version:** 4.1.0 (Comprehensive Master)
-**Status:** Final — Production Ready
-**Basis:** Merges `PRD_v3` (Master Architecture/Design) with `PRD_v2` (Implementation Details).
-
---- START OF FILE PRD_v4.md ---
-
 # InvoiceForge — Personal Invoicing Application
 **Document Version:** 4.1.0
 **Phase:** 1 — Frontend Design & Prototyping
@@ -1490,3 +1481,6 @@ import {
 *   `border-slate-800` → Borders
 *   `bg-blue-500` → Primary buttons (same)
 
+---
+
+https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%2211mWtlHs2jixr7AASKDxgdpXVEsAySfzx%22%5D,%22action%22:%22open%22,%22userId%22:%22103961307342447084491%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing, https://drive.google.com/file/d/1I0FT6GKXBMmO2b3NwDDpK5oro7VEbpo9/view?usp=sharing, https://drive.google.com/file/d/1XJNEVfa_37W011PEVbtzFyaeHkXhT5PL/view?usp=sharing, https://drive.google.com/file/d/1z0d7iNwizM3UdL6z-Uv7Tv4_qDshiwIf/view?usp=sharing
