@@ -1,0 +1,41 @@
+$ python3 extract_code_files.py docs/plan-2.md
+Processing compacted file: docs/plan-2.md
+Input file encoding detected as: utf-8
+  Created directory: app/frontend/components/shared
+Extracted: app/frontend/components/shared/PageHeader.tsx
+Extracted: app/frontend/components/shared/StatusBadge.tsx
+Extracted: app/frontend/components/ui/card.tsx
+Extracted: app/frontend/components/shared/index.ts
+  Warning: Overwriting file: app/frontend/components/ui/index.ts
+Extracted: app/frontend/components/ui/index.ts
+  Created directory: app/frontend/components/dashboard
+Extracted: app/frontend/components/dashboard/MetricCard.tsx
+Extracted: app/frontend/components/dashboard/index.ts
+Extracted: app/frontend/components/dashboard/RecentInvoiceCard.tsx
+Extracted: app/frontend/components/dashboard/RecentInvoices.tsx
+  Warning: Overwriting file: app/frontend/components/dashboard/index.ts
+Extracted: app/frontend/components/dashboard/index.ts
+Extracted: app/frontend/components/dashboard/ActivityItem.tsx
+Extracted: app/frontend/components/dashboard/ActivityFeed.tsx
+  Warning: Overwriting file: app/frontend/components/dashboard/index.ts
+Extracted: app/frontend/components/dashboard/index.ts
+  Warning: Overwriting file: app/frontend/pages/Dashboard.tsx
+Extracted: app/frontend/pages/Dashboard.tsx
+Extracted: app/assets/stylesheets/application.css.2.add
+  Warning: Overwriting file: app/frontend/components/dashboard/RecentInvoiceCard.tsx
+Extracted: app/frontend/components/dashboard/RecentInvoiceCard.tsx
+  Warning: Overwriting file: app/frontend/components/dashboard/RecentInvoices.tsx
+Extracted: app/frontend/components/dashboard/RecentInvoices.tsx
+  Warning: Overwriting file: app/frontend/components/dashboard/ActivityItem.tsx
+Extracted: app/frontend/components/dashboard/ActivityItem.tsx
+  Warning: Overwriting file: app/frontend/components/dashboard/ActivityFeed.tsx
+Extracted: app/frontend/components/dashboard/ActivityFeed.tsx
+Extracted: start_dev_server.sh
+Extracted: app/assets/stylesheets/application.css.2
+
+Extraction complete!
+Total code blocks found: 21
+Files successfully extracted: 21
+
+Files overwritten: 8
+Note: Multiple code blocks with the same filename were found; each file contains the content from the last matching block.

@@ -1,11 +1,37 @@
 // app/frontend/pages/Dashboard.tsx
+import { Link } from "@inertiajs/react"
 import { AppLayout } from "@/layouts/AppLayout"
+import { PageHeader } from "@/components/shared/PageHeader"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { mockDashboardMetrics } from "@/lib/mock-data"
+import { 
+  MetricCard, 
+  RecentInvoices, 
+  ActivityFeed 
+} from "@/components/dashboard"
+import { 
+  mockDashboardMetrics, 
+  mockInvoices, 
+  mockRecentActivity 
+} from "@/lib/mock-data"
 import { formatCurrency } from "@/lib/utils"
+import { 
+  Plus, 
+  DollarSign, 
+  Clock, 
+  TrendingUp, 
+  AlertTriangle 
+} from "lucide-react"
 
+/**
+ * Dashboard Page — Financial pulse and quick actions
+ * 
+ * Layout (v4.2):
+ * - PageHeader with date and "New Invoice" CTA
+ * - Metrics Grid: 4 columns desktop, 2 tablet, 1 mobile
+ * - Two-column layout: Recent Invoices | Activity Feed
+ */
 export default function Dashboard() {
+  // Format today's date
   const today = new Date().toLocaleDateString('en-SG', {
     weekday: 'long',
     day: 'numeric',
@@ -13,23 +39,31 @@ export default function Dashboard() {
     year: 'numeric',
   })
 
+  // Sort invoices by date (most recent first) for display
+  const recentInvoices = [...mockInvoices].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+
+  // Count invoices by status for subtext
+  const pendingCount = mockInvoices.filter(inv => inv.status === 'pending').length
+  const overdueCount = mockInvoices.filter(inv => inv.status === 'overdue').length
+  const outstandingCount = pendingCount + overdueCount
+
   return (
     <AppLayout>
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="font-display text-4xl tracking-tight leading-none text-slate-900 dark:text-slate-50">
-            Dashboard
-          </h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            {today}
-          </p>
-        </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          New Invoice
-        </Button>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        subtitle={today}
+        actions={
+          <Button asChild>
+            <Link href="/invoices/new">
+              <Plus className="h-4 w-4 mr-2" />
+              New Invoice
+            </Link>
+          </Button>
+        }
+      />
 
       {/* Metrics Grid */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -37,90 +71,48 @@ export default function Dashboard() {
         <MetricCard
           label="Outstanding"
           value={formatCurrency(mockDashboardMetrics.totalOutstanding)}
-          subtext="2 invoices"
+          subtext={`${outstandingCount} invoice${outstandingCount !== 1 ? 's' : ''}`}
+          icon={DollarSign}
         />
-        
+
         {/* Paid This Month */}
         <MetricCard
           label="Paid (Month)"
           value={formatCurrency(mockDashboardMetrics.totalPaidThisMonth)}
+          trend={{
+            value: "12%",
+            direction: "up",
+            positive: true,
+          }}
+          icon={TrendingUp}
         />
-        
+
         {/* Paid YTD */}
         <MetricCard
           label="Paid (YTD)"
           value={formatCurrency(mockDashboardMetrics.totalPaidYTD)}
+          icon={DollarSign}
+          variant="success"
         />
-        
+
         {/* Overdue */}
         <MetricCard
           label="Overdue"
           value={formatCurrency(mockDashboardMetrics.overdueAmount)}
-          subtext={`${mockDashboardMetrics.overdueCount} invoice`}
+          subtext={`${mockDashboardMetrics.overdueCount} invoice${mockDashboardMetrics.overdueCount !== 1 ? 's' : ''}`}
           variant="danger"
+          icon={AlertTriangle}
         />
       </div>
 
-      {/* Two Column Layout Placeholder */}
+      {/* Two Column Layout: Recent Invoices | Activity Feed */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Invoices Placeholder */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm p-6">
-          <h2 className="font-sans text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
-            Recent Invoices
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Invoice list will be implemented on Day 2
-          </p>
-        </div>
+        {/* Recent Invoices */}
+        <RecentInvoices invoices={recentInvoices} limit={4} />
 
-        {/* Recent Activity Placeholder */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm p-6">
-          <h2 className="font-sans text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
-            Recent Activity
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Activity feed will be implemented on Day 2
-          </p>
-        </div>
+        {/* Activity Feed */}
+        <ActivityFeed activities={mockRecentActivity} limit={5} />
       </div>
     </AppLayout>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MetricCard Component (inline for Day 1, will move to separate file on Day 2)
-// ─────────────────────────────────────────────────────────────────────────────
-
-interface MetricCardProps {
-  label: string
-  value: string
-  subtext?: string
-  variant?: 'default' | 'danger'
-}
-
-function MetricCard({ label, value, subtext, variant = 'default' }: MetricCardProps) {
-  return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm p-6">
-      {/* Label */}
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
-        {label}
-      </p>
-      
-      {/* Value */}
-      <p className={`font-mono text-3xl font-medium mt-2 ${
-        variant === 'danger' 
-          ? 'text-rose-600 dark:text-rose-400' 
-          : 'text-slate-900 dark:text-slate-50'
-      }`}>
-        {value}
-      </p>
-      
-      {/* Subtext */}
-      {subtext && (
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          {subtext}
-        </p>
-      )}
-    </div>
   )
 }

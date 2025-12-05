@@ -1,4 +1,4 @@
-/* app/assets/stylesheets/application.css — Complete Day 2 Version */
+/* app/assets/stylesheets/application.css */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    INVOICEFORGE DESIGN SYSTEM — v4.2 Neo-Editorial Precision
@@ -13,6 +13,7 @@
 @theme {
   /* ─────────────────────────────────────────────────────────────────────────
      TYPOGRAPHY
+     Distinctive serif + modern sans-serif pairing for editorial sophistication
      ───────────────────────────────────────────────────────────────────────── */
   --font-display: "Instrument Serif", Georgia, serif;
   --font-sans: "Geist", system-ui, sans-serif;
@@ -20,6 +21,7 @@
 
   /* ─────────────────────────────────────────────────────────────────────────
      PRIMARY ACTION COLORS
+     Electric Blue — used exclusively for primary actions
      ───────────────────────────────────────────────────────────────────────── */
   --color-accent: var(--color-blue-500);
   --color-accent-hover: var(--color-blue-600);
@@ -27,6 +29,7 @@
 
   /* ─────────────────────────────────────────────────────────────────────────
      STATUS COLORS
+     Semantic colors for invoice states
      ───────────────────────────────────────────────────────────────────────── */
   --color-status-draft: var(--color-slate-400);
   --color-status-pending: var(--color-amber-500);
@@ -35,6 +38,7 @@
 
   /* ─────────────────────────────────────────────────────────────────────────
      BRUTALIST SHADOWS
+     Hard-edge shadows for Neo-Editorial aesthetic
      ───────────────────────────────────────────────────────────────────────── */
   --shadow-brutal: 4px 4px 0px 0px var(--color-slate-900);
   --shadow-brutal-sm: 2px 2px 0px 0px var(--color-slate-900);
@@ -54,49 +58,21 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @layer base {
+  /* Apply default font and smooth transitions for theme changes */
   html {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Smooth color transitions for theme toggle */
   * {
     @apply transition-colors duration-200;
   }
 
+  /* Prevent transition on page load */
   html.no-transitions * {
     transition: none !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   ANIMATIONS — Staggered list entrances for premium feel
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-@layer utilities {
-  .animate-fade-in-up {
-    animation: fadeInUp 0.3s ease-out forwards;
-    opacity: 0;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-in-up {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
   }
 }
 
@@ -105,6 +81,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @media print {
+  /* Hide non-essential elements */
   .no-print,
   nav,
   footer,
@@ -113,6 +90,7 @@
     display: none !important;
   }
 
+  /* Reset backgrounds for print */
   body {
     background: white !important;
     color: black !important;
@@ -120,6 +98,7 @@
     print-color-adjust: exact;
   }
 
+  /* Ensure proper page breaks */
   .invoice-container {
     box-shadow: none !important;
     border: 1px solid #e2e8f0 !important;

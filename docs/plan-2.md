@@ -1113,6 +1113,7 @@ export default function Dashboard() {
 **Step 6.3.1: Add Animation Keyframes to CSS**
 
 ```css
+// app/assets/stylesheets/application.css.2.add
 /* app/assets/stylesheets/application.css — Add to existing file */
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1557,11 +1558,11 @@ function EmptyState() {
 
 ### 7.2 Manual Testing Procedure
 
-```markdown
 ## Testing Steps
 
 ### 1. Start Development Servers
 ```bash
+# File: start_dev_server.sh
 # Terminal 1
 bin/rails server
 
@@ -1641,7 +1642,6 @@ bin/vite dev
 4. Verify status badges announce their meaning
 5. Open DevTools > Rendering > Emulate prefers-reduced-motion
 6. Verify animations are disabled
-```
 
 ---
 
@@ -1699,6 +1699,7 @@ app/frontend/
 ## Complete CSS File (Updated with Animations)
 
 ```css
+// app/assets/stylesheets/application.css.2
 /* app/assets/stylesheets/application.css — Complete Day 2 Version */
 
 /* ═══════════════════════════════════════════════════════════════════════════
