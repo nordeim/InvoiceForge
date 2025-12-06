@@ -38,19 +38,52 @@ export function formatCurrency(amount: number): string {
  * formatDate('2025-01-15', { month: 'short', day: 'numeric' }) // "15 Jan"
  */
 export function formatDate(
-  dateStr: string, 
-  options?: Intl.DateTimeFormatOptions
+  dateStr: string,
+  options?: Intl.DateTimeFormatOptions | null
 ): string {
-  const defaultOptions: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  };
+
+  // Handle null/undefined
+  if (options == null) {
+    return new Intl.DateTimeFormat('en-SG', defaultOptions)
+      .format(new Date(dateStr));
   }
-  
-  const finalOptions = options || defaultOptions
-  
+
+  // If empty object, use defaults
+  if (Object.keys(options).length === 0) {
+    return new Intl.DateTimeFormat('en-SG', defaultOptions)
+      .format(new Date(dateStr));
+  }
+
+  // Determine if we should merge with defaults
+  const shouldMerge = shouldMergeWithDefaults(options, defaultOptions);
+  const finalOptions = shouldMerge 
+    ? { ...defaultOptions, ...options }
+    : options;
+
   return new Intl.DateTimeFormat('en-SG', finalOptions)
-    .format(new Date(dateStr))
+    .format(new Date(dateStr));
+}
+
+/**
+ * Heuristic: Merge if the provided options would result in incomplete output
+ * Example: { month: 'long' } without year/day is incomplete
+ * Example: { month: 'short', day: 'numeric' } is complete enough
+ */
+function shouldMergeWithDefaults(
+  provided: Intl.DateTimeFormatOptions,
+  defaults: Intl.DateTimeFormatOptions
+): boolean {
+  // If user provides all three core properties, don't merge
+  const coreProperties = ['year', 'month', 'day'] as const;
+  const providedCoreCount = coreProperties.filter(p => p in provided).length;
+  
+  // Heuristic: If less than 2 core properties, likely incomplete
+  return providedCoreCount < 2;
 }
 
 /**

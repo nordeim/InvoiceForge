@@ -54,6 +54,7 @@ export {
   Sheet, 
   SheetContent, 
   SheetHeader, 
+  SheetFooter, // Included for Day 5+ 
   SheetTitle, 
   SheetTrigger,
   SheetDescription,

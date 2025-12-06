@@ -12,6 +12,7 @@ export interface InputProps
  * - Surface background (bg-white / bg-slate-950)
  * - Border with focus ring
  * - Consistent sizing with buttons
+ * - Proper dark mode focus ring offset
  */
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
@@ -29,12 +30,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           "text-sm text-slate-900 dark:text-slate-100",
           // Placeholder
           "placeholder:text-slate-400 dark:placeholder:text-slate-500",
-          // Focus state
+          // Focus state with proper ring offset
           "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+          "focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-950",
           // Disabled state
           "disabled:cursor-not-allowed disabled:opacity-50",
+          "disabled:bg-slate-100 dark:disabled:bg-slate-900",
+          // Read-only state
+          "read-only:bg-slate-50 dark:read-only:bg-slate-900",
           // File input specifics
           "file:border-0 file:bg-transparent file:text-sm file:font-medium",
+          "file:text-slate-900 dark:file:text-slate-100",
           className
         )}
         ref={ref}
