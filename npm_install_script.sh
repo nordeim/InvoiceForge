@@ -9,3 +9,16 @@ npm install -D @vitejs/plugin-react
 npm install tailwindcss @tailwindcss/vite
 npm install clsx tailwind-merge class-variance-authority lucide-react
 npm install @radix-ui/react-slot @radix-ui/react-dialog @radix-ui/react-separator @radix-ui/react-tooltip
+
+# Day 2 Pre-Implementation Setup
+# ─────────────────────────────────
+
+# Install missing dependencies (if not already installed)
+npm install @radix-ui/react-separator
+
+# Verify all dependencies are present
+npm ls @radix-ui/react-separator
+npm ls clsx
+npm ls tailwind-merge
+npm ls lucide-react
+
