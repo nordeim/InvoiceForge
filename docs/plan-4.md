@@ -1302,6 +1302,7 @@ export default function InvoicesEdit({ id }: EditInvoiceProps) {
 **Step 6.3.3: Update Rails Controllers**
 
 ```ruby
+// app/controllers/invoices_controller.rb
 # app/controllers/invoices_controller.rb
 class InvoicesController < ApplicationController
   def index
@@ -1323,6 +1324,7 @@ end
 **Step 6.3.4: Update Routes**
 
 ```ruby
+// config/routes.rb
 # config/routes.rb
 Rails.application.routes.draw do
   root "dashboard#index"
@@ -1445,7 +1447,6 @@ end
 
 ### 7.2 Manual Testing Procedure
 
-```markdown
 ## Testing Steps
 
 ### 1. Start Development Servers
@@ -1554,7 +1555,6 @@ bin/vite dev
 8. Verify dropdown opens
 9. Arrow through dropdown items
 10. Press Escape to close
-```
 
 ---
 
