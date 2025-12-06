@@ -6,6 +6,14 @@ Now, please meticulously review and then format the attached document as a markd
 
 ---
 
+awesome understanding! now, please meticulously review and analyze my Day 2 implementation below.
+
+---
+
+awesome job on your meticulous analysis, planning and execution! Please keep up the good work in your rigorous and meticulous approach to planning and execution! Now, please meticulously review the diff output comparing the "original" versus "your patched version", double-check that there is no regression in the updated version of app/frontend/lib/utils.ts.
+
+---
+
 Awesome job on meticulous analysis, planning and execution! Please keep up the good work in your rigorous and meticulous approach to planning and execution! Yes, please meticulously proceed with your implementation plan for `PRD_v4.md`. Make sure you validate the `PRD_v4.md` after generation to ensure its completeness, correctness and accuracy (according to your specifications in the planning).
 
 ---

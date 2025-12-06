@@ -22,3 +22,14 @@ npm ls clsx
 npm ls tailwind-merge
 npm ls lucide-react
 
+# Day 3: Install all required dependencies upfront
+npm install \
+  @radix-ui/react-label \
+  @radix-ui/react-dropdown-menu \
+  @radix-ui/react-dialog \
+  class-variance-authority
+
+# Verify installation
+npm ls @radix-ui/react-label @radix-ui/react-dropdown-menu @radix-ui/react-dialog class-variance-authority
+
+npm install @radix-ui/react-label @radix-ui/react-dropdown-menu @radix-ui/react-dialog class-variance-authority
