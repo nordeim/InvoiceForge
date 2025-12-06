@@ -32,6 +32,15 @@
   --shadow-brutal-sm: 2px 2px 0px 0px var(--color-slate-900);
 }
 
+/* Utility class for browsers that don't support @theme shadow */
+.shadow-brutal {
+  box-shadow: 4px 4px 0px 0px rgb(15 23 42); /* slate-900 */
+}
+
+.dark .shadow-brutal {
+  box-shadow: 4px 4px 0px 0px rgb(226 232 240); /* slate-200 in dark mode */
+}
+
 /* Dark Mode Shadow Overrides */
 .dark {
   --shadow-brutal: 4px 4px 0px 0px var(--color-slate-100);
