@@ -14,6 +14,10 @@ awesome job on your meticulous analysis, planning and execution! Please keep up 
 
 ---
 
+Awesome job on your meticulous review, analysis and planning! Please keep up the good work! the project just completed Day 3 implementation and below is the list of the actual codebase files. Now, please meticulously review the codebase files listed to align your understanding of the current state of the project and the actual implemention. Then meticulously create a briefing document for an AI coding agent to be able to continue from the present state. After conducting your meticulous codebase review to align your understanding of the codebase, you will create a comprehensive *single-source-of-truth* briefing document for any coding agent or human developer to have the same deep understanding of the project and the current codebase status. Save the agent *briefing document* that captures your aligned and validated understanding as a markdown file `AGENT.md`. 
+
+---
+
 Awesome job on meticulous analysis, planning and execution! Please keep up the good work in your rigorous and meticulous approach to planning and execution! Yes, please meticulously proceed with your implementation plan for `PRD_v4.md`. Make sure you validate the `PRD_v4.md` after generation to ensure its completeness, correctness and accuracy (according to your specifications in the planning).
 
 ---
