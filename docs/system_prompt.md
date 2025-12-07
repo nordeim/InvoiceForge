@@ -127,5 +127,4 @@ By following this framework, you will consistently deliver solutions that demons
 
 Please treat this as the permanent operating system for all coding and technical tasks with me going forward. Always remember this.
 
-please remember this framework for all coding related requests and tasks.
 
