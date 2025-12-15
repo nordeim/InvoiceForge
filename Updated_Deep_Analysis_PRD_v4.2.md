@@ -336,11 +336,11 @@ end
 | **Gemfile** | ✅ Complete | Rails 8.1.1, PostgreSQL, Devise, Prawn (PDF), RSpec |
 | **Models** | ✅ Complete | Client, Invoice, LineItem, User with validations |
 | **Migrations** | ✅ Complete | Full schema matching TypeScript types |
-| **Controllers** | ⚙️ Partial | Dashboard, Clients complete; Invoices needs remaining actions |
+| **Controllers** | ✅ Complete | All CRUD + send_invoice, mark_paid with email |
 | **Authentication** | ✅ Complete | Devise with session-based auth |
 | **Payments** | ❌ Pending | Mock PaymentModal exists, Stripe integration needed |
 | **PDF Generation** | ✅ Complete | Prawn-based InvoicePdfGenerator service |
-| **Email** | ⚙️ Partial | InvoiceMailer templates created, not wired to actions |
+| **Email** | ✅ Complete | InvoiceMailer wired to send_invoice, mark_paid |
 
 ---
 
@@ -349,16 +349,11 @@ end
 ### 5.1 Priority Order
 
 1. **Stripe Integration** (High Priority)
-   - Replace mock PaymentModal with Stripe Elements
+   - Replace mock PaymentModal with Stripe Elements or Checkout
    - Webhook handling for payment status
 
-2. **Complete InvoicesController** (Medium Priority)
-   - Wire up remaining CRUD actions
-   - Add mark_paid, mark_sent, cancel actions
-
-3. **Email Wiring** (Medium Priority)
-   - Connect InvoiceMailer to invoice actions
-   - Send on invoice creation/update
+2. **Frontend Send Button** (Low Priority)
+   - Wire "Send Invoice" button in Edit.tsx to call send_invoice action
 
 ### 5.2 Known Limitations
 

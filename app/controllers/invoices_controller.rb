@@ -1,6 +1,6 @@
 # app/controllers/invoices_controller.rb
 class InvoicesController < ApplicationController
-  before_action :set_invoice, only: [:show, :edit, :update, :destroy, :duplicate, :mark_paid, :mark_sent, :cancel, :download_pdf]
+  before_action :set_invoice, only: [:show, :edit, :update, :destroy, :duplicate, :mark_paid, :mark_sent, :send_invoice, :cancel, :download_pdf]
 
   # GET /invoices
   def index
@@ -117,8 +117,10 @@ class InvoicesController < ApplicationController
 
   # PUT /invoices/:id/mark_paid
   def mark_paid
-    if @invoice.update(status: 'paid')
-      redirect_to edit_invoice_path(@invoice), notice: 'Invoice marked as paid.'
+    if @invoice.mark_paid!
+      # Send payment confirmation email
+      InvoiceMailer.payment_received(@invoice).deliver_later
+      redirect_to edit_invoice_path(@invoice), notice: 'Invoice marked as paid. Confirmation email sent.'
     else
       redirect_to edit_invoice_path(@invoice), alert: 'Failed to update invoice status.'
     end
@@ -126,16 +128,27 @@ class InvoicesController < ApplicationController
 
   # PUT /invoices/:id/mark_sent
   def mark_sent
-    if @invoice.update(status: 'pending')
+    if @invoice.mark_sent!
       redirect_to edit_invoice_path(@invoice), notice: 'Invoice marked as sent.'
     else
       redirect_to edit_invoice_path(@invoice), alert: 'Failed to update invoice status.'
     end
   end
 
+  # POST /invoices/:id/send_invoice
+  def send_invoice
+    if @invoice.mark_sent!
+      # Send invoice email with PDF attachment
+      InvoiceMailer.send_invoice(@invoice).deliver_later
+      redirect_to edit_invoice_path(@invoice), notice: 'Invoice sent successfully.'
+    else
+      redirect_to edit_invoice_path(@invoice), alert: 'Failed to send invoice.'
+    end
+  end
+
   # PUT /invoices/:id/cancel
   def cancel
-    if @invoice.update(status: 'cancelled')
+    if @invoice.cancel!
       redirect_to edit_invoice_path(@invoice), notice: 'Invoice cancelled.'
     else
       redirect_to edit_invoice_path(@invoice), alert: 'Failed to cancel invoice.'

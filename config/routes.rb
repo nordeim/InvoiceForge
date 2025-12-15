@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :invoices do
     member do
       post :duplicate      # POST /invoices/:id/duplicate
+      post :send_invoice   # POST /invoices/:id/send_invoice
       put :mark_paid       # PUT /invoices/:id/mark_paid
       put :mark_sent       # PUT /invoices/:id/mark_sent
       put :cancel          # PUT /invoices/:id/cancel

@@ -2747,3 +2747,7 @@ Completed 200 OK in 36ms (Views: 5.0ms | ActiveRecord: 5.2ms (11 queries, 0 cach
   [1m[36mLineItem Load (1.5ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 8 /*application='Invoiceforge'*/[0m
   [1m[36mLineItem Load (1.1ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 8 ORDER BY "line_items"."position" ASC /*application='Invoiceforge'*/[0m
   ↳ app/services/invoice_pdf_generator.rb:145:in 'InvoicePdfGenerator#render_line_items'
+DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
