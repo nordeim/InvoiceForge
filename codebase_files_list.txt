@@ -129,10 +129,6 @@ db/migrate/20251215000004_devise_create_users.rb
 Gemfile
 Gemfile.lock
 Rakefile
-tests/manual_testing_procedure-2.md
-tests/manual_testing_procedure-4.md
-tests/manual_testing_procedure.md
-tests/manual_testing_procedure-3.md
 vite.config.ts
 package.json
 package-lock.json
