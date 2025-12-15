@@ -623,3 +623,7 @@ Processing by DashboardController#index as HTML
 Completed 500 Internal Server Error in 249ms (ActiveRecord: 19.5ms (11 queries, 0 cached) | GC: 0.0ms)
 
 
+Started GET "/" for ::1 at 2025-12-15 10:59:00 +0800
+Started GET "/favicon.ico" for ::1 at 2025-12-15 10:59:00 +0800
+Started GET "/" for ::1 at 2025-12-15 11:00:34 +0800
+Started GET "/favicon.ico" for ::1 at 2025-12-15 11:00:34 +0800
