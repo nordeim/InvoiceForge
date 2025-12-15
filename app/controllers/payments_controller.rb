@@ -2,7 +2,7 @@
 class PaymentsController < ApplicationController
   # Public endpoints - no auth required
   skip_before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:webhook]
+  skip_before_action :verify_authenticity_token, only: [:create_checkout, :webhook]
 
   # POST /pay/:token
   # Creates a Stripe Checkout Session and redirects to Stripe
@@ -46,11 +46,36 @@ class PaymentsController < ApplicationController
   end
 
   # GET /pay/:token/success
+  # Handle successful payment redirect from Stripe
   def success
     @invoice = Invoice.find_by!(token: params[:token])
     
-    # The webhook handles the actual status update, but we show success message
-    redirect_to public_invoice_path(@invoice.token), notice: 'Payment processing. You will receive a confirmation email shortly.'
+    # For local development (no webhook), verify payment directly with Stripe
+    # In production, the webhook handles this, but webhooks can't reach localhost
+    if @invoice.status != 'paid'
+      # Try to verify the payment was successful by checking recent checkout sessions
+      begin
+        sessions = Stripe::Checkout::Session.list(limit: 5)
+        completed_session = sessions.data.find do |session|
+          session.metadata&.invoice_token == @invoice.token && 
+          session.payment_status == 'paid'
+        end
+        
+        if completed_session
+          @invoice.mark_paid!
+          InvoiceMailer.payment_received(@invoice).deliver_later
+          Rails.logger.info "Invoice #{@invoice.invoice_number} marked as paid via success redirect"
+        end
+      rescue Stripe::StripeError => e
+        Rails.logger.warn "Could not verify payment with Stripe: #{e.message}"
+      end
+    end
+    
+    if @invoice.status == 'paid'
+      redirect_to public_invoice_path(@invoice.token), notice: 'Payment successful! Thank you.'
+    else
+      redirect_to public_invoice_path(@invoice.token), notice: 'Payment processing. You will receive a confirmation email shortly.'
+    end
   end
 
   # GET /pay/:token/cancel

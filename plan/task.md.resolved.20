@@ -1,0 +1,19 @@
+# Stripe Integration Task
+
+## Checklist
+
+### Backend
+- [/] Uncomment stripe gem in Gemfile
+- [ ] Create config/initializers/stripe.rb
+- [ ] Create PaymentsController
+- [ ] Add payment routes
+
+### Environment
+- [ ] Add Stripe keys to .env.docker
+- [ ] Add Stripe keys to .env
+
+### Frontend
+- [ ] Update PublicInvoice/Show.tsx
+
+### Verification
+- [ ] Test checkout flow

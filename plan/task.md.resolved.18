@@ -1,0 +1,15 @@
+# Phase A: Quick Wins Task
+
+## Checklist
+
+### InvoicesController
+- [/] Update [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) to use model method + send email
+- [ ] Update [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135) to use model method
+- [ ] Add [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) action with email
+- [ ] Update [cancel](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#136-144) to use model method
+
+### Routes
+- [ ] Add [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) route
+
+### Verification
+- [ ] Test email sending in development

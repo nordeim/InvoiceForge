@@ -1,0 +1,16 @@
+# PDF Generation Implementation Task
+
+## Checklist
+
+### Backend
+- [/] Add public PDF download route to routes.rb
+- [ ] Add download_pdf action to PublicInvoicesController
+
+### Frontend  
+- [ ] Enable Download button in PublicInvoice/Show.tsx
+- [ ] Add Download button in Invoices/Edit.tsx
+- [ ] Add Download option in Invoices/Index.tsx row actions
+
+### Testing
+- [ ] Test authenticated PDF download
+- [ ] Test public PDF download

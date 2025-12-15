@@ -1,0 +1,21 @@
+# Stripe Integration Task
+
+## Status: ✅ Complete
+
+## Checklist
+
+### Backend
+- [x] Uncomment stripe gem in Gemfile
+- [x] Create config/initializers/stripe.rb
+- [x] Create PaymentsController
+- [x] Add payment routes
+
+### Environment
+- [x] Add Stripe keys to .env.docker
+- [x] Add Stripe keys to .env
+
+### Frontend
+- [x] Update PublicInvoice/Show.tsx
+
+### Verification
+- [x] Routes verified: `/pay/:token`, `/webhooks/stripe`

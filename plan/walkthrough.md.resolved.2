@@ -1,0 +1,51 @@
+# PDF Generation Implementation Walkthrough
+
+## Summary
+Implemented invoice PDF download functionality using the existing Prawn-based [InvoicePdfGenerator](file:///home/project/invoiceforge/app/services/invoice_pdf_generator.rb#8-259) service, with download buttons for both authenticated and public invoice views.
+
+---
+
+## Changes Made
+
+### Backend
+| File | Change |
+|------|--------|
+| [config/routes.rb](file:///home/project/invoiceforge/config/routes.rb) | Added `get "i/:token/download"` for public PDF access |
+| [app/controllers/public_invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/public_invoices_controller.rb) | Added [download_pdf](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#145-155) action |
+| [app/services/invoice_pdf_generator.rb](file:///home/project/invoiceforge/app/services/invoice_pdf_generator.rb) | Fixed table column widths (515pt total) |
+
+### Frontend
+| File | Change |
+|------|--------|
+| [app/frontend/pages/PublicInvoice/Show.tsx](file:///home/project/invoiceforge/app/frontend/pages/PublicInvoice/Show.tsx) | Enabled Download PDF button with link |
+| [app/frontend/pages/Invoices/Edit.tsx](file:///home/project/invoiceforge/app/frontend/pages/Invoices/Edit.tsx) | Added Download PDF to dropdown menu |
+| [app/frontend/components/invoices/InvoiceRowActions.tsx](file:///home/project/invoiceforge/app/frontend/components/invoices/InvoiceRowActions.tsx) | Added Download PDF option |
+
+---
+
+## PDF Output
+
+![Generated Invoice PDF](/home/pete/.gemini/antigravity/brain/ab55e45e-71ad-44a5-94e4-6b01d29131df/uploaded_image_1765777803876.png)
+
+**Features:**
+- Invoice number and status badge prominently displayed
+- Client billing information
+- Line items table with Description, Qty, Unit, Rate, Amount
+- Subtotal and Total Due
+- Footer with generation date
+
+---
+
+## Verification
+
+```bash
+# Generate test PDF
+source .env && bin/rails runner "
+  invoice = Invoice.includes(:client, :line_items).last
+  generator = InvoicePdfGenerator.new(invoice)
+  File.binwrite('tmp/test_invoice.pdf', generator.generate)
+  puts 'PDF generated: tmp/test_invoice.pdf'
+"
+```
+
+**Result**: ✅ PDF generates correctly with all invoice data

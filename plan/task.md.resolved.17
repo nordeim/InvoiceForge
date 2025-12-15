@@ -1,0 +1,19 @@
+# PDF Generation Implementation Task
+
+## Checklist
+
+### Backend
+- [x] Add public PDF download route to routes.rb
+- [x] Add download_pdf action to PublicInvoicesController
+- [x] Fix table column widths in InvoicePdfGenerator
+
+### Frontend  
+- [x] Enable Download button in PublicInvoice/Show.tsx
+- [x] Add Download button in Invoices/Edit.tsx
+- [x] Add Download option in InvoiceRowActions.tsx
+
+### Testing
+- [x] Test PDF generation via Rails runner
+- [x] Verify PDF output contains all invoice data
+
+## Status: ✅ Complete

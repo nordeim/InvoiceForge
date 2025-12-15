@@ -1,0 +1,54 @@
+# Stripe Integration Walkthrough
+
+## Summary
+Integrated Stripe Checkout for invoice payments. Users click "Pay" → redirected to Stripe → webhook updates invoice status.
+
+---
+
+## Files Created/Modified
+
+| File | Action |
+|------|--------|
+| [Gemfile](file:///home/project/invoiceforge/Gemfile) | Uncommented `stripe` gem |
+| [stripe.rb](file:///home/project/invoiceforge/config/initializers/stripe.rb) | **New** - API key config |
+| [payments_controller.rb](file:///home/project/invoiceforge/app/controllers/payments_controller.rb) | **New** - Checkout + webhook |
+| [routes.rb](file:///home/project/invoiceforge/config/routes.rb) | Added payment routes |
+| [Show.tsx](file:///home/project/invoiceforge/app/frontend/pages/PublicInvoice/Show.tsx) | Form POST instead of modal |
+| `.env`, [.env.docker](file:///home/project/invoiceforge/.env.docker) | Stripe keys added |
+
+---
+
+## Payment Flow
+
+```mermaid
+sequenceDiagram
+    User->>Frontend: Click "Pay"
+    Frontend->>Rails: POST /pay/:token
+    Rails->>Stripe: Create Checkout Session
+    Stripe-->>User: Redirect to payment page
+    User->>Stripe: Enter card details
+    Stripe->>Rails: Webhook: checkout.session.completed
+    Rails->>DB: Mark invoice as paid
+    Rails->>Email: Send confirmation
+```
+
+---
+
+## Routes Added
+
+| Route | Handler |
+|-------|---------|
+| `POST /pay/:token` | `payments#create_checkout` |
+| `GET /pay/:token/success` | `payments#success` |
+| `GET /pay/:token/cancel` | `payments#cancel` |
+| `POST /webhooks/stripe` | `payments#webhook` |
+
+---
+
+## Testing
+
+1. Start dev server: `foreman start -f Procfile.dev`
+2. Navigate to `/i/:token` for a pending invoice
+3. Click "Pay" button → redirects to Stripe
+4. Use test card: `4242 4242 4242 4242`
+5. Webhook marks invoice as paid

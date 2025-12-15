@@ -1,0 +1,33 @@
+# Documentation Update Task
+
+## Objective
+Update AGENT.md, README.md, and Updated_Deep_Analysis_PRD_v4.2.md to reflect Phase 2 changes.
+
+## Checklist
+
+### AGENT.md
+- [/] Update header (date, status, stack)
+- [ ] Update Executive Summary with Phase 2 completions
+- [ ] Update Technical Architecture (Database, Auth, Vite)
+- [ ] Update Component Status table
+- [ ] Update Key Files Reference
+- [ ] Update Next Steps
+
+### README.md
+- [ ] Add PostgreSQL badge
+- [ ] Update Quick Start (Docker, Procfile.dev)
+- [ ] Update Architecture (PostgreSQL instead of SQLite)
+- [ ] Update Roadmap checkboxes
+- [ ] Update Project Status section
+
+### Updated_Deep_Analysis_PRD_v4.2.md
+- [ ] Update Executive Summary
+- [ ] Update Technology Stack section
+- [ ] Update Directory Structure
+- [ ] Update Routing (Devise routes)
+- [ ] Update Backend Gap Analysis
+- [ ] Update Phase 2 Roadmap
+
+## Notes
+- Include React HMR limitation (preamble issue workaround)
+- Date: 2025-12-15

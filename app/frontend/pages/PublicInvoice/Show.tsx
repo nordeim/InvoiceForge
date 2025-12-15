@@ -77,6 +77,28 @@ export default function PublicInvoiceShow({ invoice }: PublicInvoiceShowProps) {
     position: item.position,
   }))
 
+  // Transform invoice data for components that expect the Invoice type
+  const invoiceForComponents = {
+    id: '',
+    invoiceNumber: invoice.invoiceNumber,
+    status: invoice.status,
+    issueDate: invoice.issueDate,
+    dueDate: invoice.dueDate,
+    subtotal: invoice.subtotal,
+    totalDiscount: invoice.totalDiscount,
+    total: invoice.total,
+    notes: invoice.notes,
+    client: {
+      id: '',
+      name: invoice.clientName,
+      company: invoice.clientCompany,
+      email: invoice.clientEmail,
+      address: invoice.clientAddress,
+      phone: invoice.clientPhone,
+    },
+    lineItems: lineItems,
+  }
+
   return (
     <>
       <Head title={`Invoice ${invoice.invoiceNumber}`} />
@@ -85,12 +107,7 @@ export default function PublicInvoiceShow({ invoice }: PublicInvoiceShowProps) {
         {/* Invoice Container */}
         <div className="invoice-container bg-white rounded-lg shadow-sm border border-slate-200 p-6 sm:p-8 lg:p-10 print:shadow-none print:border-0 print:p-0">
           {/* Header with Invoice Number Hero */}
-          <PublicInvoiceHeader
-            invoiceNumber={invoice.invoiceNumber}
-            status={invoice.status}
-            issueDate={invoice.issueDate}
-            dueDate={invoice.dueDate}
-          />
+          <PublicInvoiceHeader invoice={invoiceForComponents as any} />
 
           {/* Billed To */}
           <PublicInvoiceBilledTo
@@ -107,12 +124,7 @@ export default function PublicInvoiceShow({ invoice }: PublicInvoiceShowProps) {
           <PublicInvoiceLineItems lineItems={lineItems} />
 
           {/* Totals */}
-          <PublicInvoiceTotals
-            subtotal={invoice.subtotal}
-            totalDiscount={invoice.totalDiscount}
-            total={invoice.total}
-            status={invoice.status}
-          />
+          <PublicInvoiceTotals lineItems={lineItems} />
 
           {/* Notes */}
           <PublicInvoiceNotes notes={invoice.notes} />

@@ -1,0 +1,154 @@
+# InvoiceForge Phase 2 Implementation Walkthrough
+
+**Completed:** 2025-12-15
+**Duration:** Single session
+
+---
+
+## Summary
+
+Phase 2 backend integration has been successfully implemented for InvoiceForge. The application now has:
+
+| Feature | Status |
+|---------|--------|
+| PostgreSQL 16 Alpine (Docker) | ✅ Complete |
+| ActiveRecord Models | ✅ Complete |
+| Devise Authentication | ✅ Complete |
+| PDF Generation (Prawn) | ✅ Complete |
+| Email Notifications | ✅ Complete |
+| Stripe Payments | ⏸️ Deferred |
+
+---
+
+## What Was Implemented
+
+### 1. Backend Foundation
+
+**Database (PostgreSQL 16 Alpine):**
+- Docker configuration with [docker-compose.yml](file:///home/project/invoiceforge/docker-compose.yml)
+- `postgres:16-alpine` base image
+- Environment-based configuration via `.env`
+- Convenience script [bin/docker-dev](file:///home/project/invoiceforge/bin/docker-dev) for management
+
+**Migrations Created:**
+- `clients` table (name, email, company, address, phone, city, country, postal_code, notes)
+- `invoices` table (client_id, invoice_number, status, dates, totals, token)
+- [line_items](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#269-306) table (invoice_id, item_type, description, quantity, unit_type, unit_price, position)
+- `users` table (Devise authentication)
+
+**Models with Validations:**
+- [Client](file:///home/project/invoiceforge/app/models/client.rb) - computed [total_billed](file:///home/project/invoiceforge/app/models/client.rb#28-32), [last_invoice_date](file:///home/project/invoiceforge/app/models/client.rb#33-37)
+- [Invoice](file:///home/project/invoiceforge/app/models/invoice.rb) - status management, totals calculation
+- [LineItem](file:///home/project/invoiceforge/app/models/line_item.rb) - type-based validations
+- [User](file:///home/project/invoiceforge/app/models/user.rb) - Devise authentication
+
+---
+
+### 2. Authentication (Devise)
+
+- Session-based authentication
+- `before_action :authenticate_user!` on all controllers
+- Public invoice view (`/i/:token`) skips authentication
+- Current user shared via Inertia for all pages
+
+**Default Login:**
+```
+Email: admin@invoiceforge.app
+Password: password123
+```
+
+---
+
+### 3. PDF Generation
+
+- [InvoicePdfGenerator](file:///home/project/invoiceforge/app/services/invoice_pdf_generator.rb) service using Prawn
+- Neo-Editorial styling with SGD currency formatting
+- Download via `/invoices/:id/download_pdf`
+
+---
+
+### 4. Email Notifications
+
+- [InvoiceMailer](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb) with 3 email types:
+  - [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) - sends invoice with PDF attachment
+  - [payment_reminder](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#25-37) - overdue invoice reminder
+  - [payment_received](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#38-48) - payment confirmation
+- HTML and plain text templates
+- letter_opener configured for development preview
+
+---
+
+## Files Created/Modified
+
+### New Files (33 total)
+
+**Docker:**
+- [docker-compose.yml](file:///home/project/invoiceforge/docker-compose.yml), [Dockerfile](file:///home/project/invoiceforge/Dockerfile), [.dockerignore](file:///home/project/invoiceforge/.dockerignore), [.env.docker](file:///home/project/invoiceforge/.env.docker)
+- [docker/init-db/01-create-test-db.sh](file:///home/project/invoiceforge/docker/init-db/01-create-test-db.sh), [bin/docker-dev](file:///home/project/invoiceforge/bin/docker-dev)
+
+**Rails Config:**
+- [config/application.rb](file:///home/project/invoiceforge/config/application.rb), [config/boot.rb](file:///home/project/invoiceforge/config/boot.rb), [config/environment.rb](file:///home/project/invoiceforge/config/environment.rb)
+- `config/environments/{development,test,production}.rb`
+- `config/initializers/{devise,inertia_rails,cors}.rb`
+
+**Database:**
+- [db/migrate/20251215000001_create_clients.rb](file:///home/project/invoiceforge/db/migrate/20251215000001_create_clients.rb)
+- [db/migrate/20251215000002_create_invoices.rb](file:///home/project/invoiceforge/db/migrate/20251215000002_create_invoices.rb)
+- [db/migrate/20251215000003_create_line_items.rb](file:///home/project/invoiceforge/db/migrate/20251215000003_create_line_items.rb)
+- [db/migrate/20251215000004_devise_create_users.rb](file:///home/project/invoiceforge/db/migrate/20251215000004_devise_create_users.rb)
+- [db/seeds.rb](file:///home/project/invoiceforge/db/seeds.rb)
+
+**Models:**
+- [app/models/application_record.rb](file:///home/project/invoiceforge/app/models/application_record.rb)
+- [app/models/client.rb](file:///home/project/invoiceforge/app/models/client.rb)
+- [app/models/invoice.rb](file:///home/project/invoiceforge/app/models/invoice.rb)
+- [app/models/line_item.rb](file:///home/project/invoiceforge/app/models/line_item.rb)
+- [app/models/user.rb](file:///home/project/invoiceforge/app/models/user.rb)
+
+**Mailers:**
+- [app/mailers/application_mailer.rb](file:///home/project/invoiceforge/app/mailers/application_mailer.rb)
+- [app/mailers/invoice_mailer.rb](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb)
+- `app/views/layouts/mailer.{html,text}.erb`
+- `app/views/invoice_mailer/send_invoice.{html,text}.erb`
+- `app/views/invoice_mailer/payment_reminder.{html,text}.erb`
+- `app/views/invoice_mailer/payment_received.{html,text}.erb`
+
+**Services:**
+- [app/services/invoice_pdf_generator.rb](file:///home/project/invoiceforge/app/services/invoice_pdf_generator.rb)
+
+### Modified Files
+- [Gemfile](file:///home/project/invoiceforge/Gemfile) - Added Rails 8, pg, Devise, Prawn, RSpec, etc.
+- [config/database.yml](file:///home/project/invoiceforge/config/database.yml) - PostgreSQL v16 for all environments
+- [config/routes.rb](file:///home/project/invoiceforge/config/routes.rb) - Added Devise and PDF routes
+- [app/controllers/application_controller.rb](file:///home/project/invoiceforge/app/controllers/application_controller.rb) - Added auth + current user
+- [app/controllers/dashboard_controller.rb](file:///home/project/invoiceforge/app/controllers/dashboard_controller.rb) - Real database queries
+- [app/controllers/clients_controller.rb](file:///home/project/invoiceforge/app/controllers/clients_controller.rb) - Full CRUD
+- [app/controllers/invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb) - Added download_pdf
+- [app/controllers/public_invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/public_invoices_controller.rb) - Skip auth
+
+---
+
+## Verification Commands
+
+```bash
+# Start PostgreSQL
+docker compose up -d db
+
+# Check database
+docker compose exec db psql -U invoiceforge -d invoiceforge_development -c "SELECT COUNT(*) FROM clients;"
+
+# Run Rails console
+source .env && bundle exec rails console
+
+# Test PDF generation
+Invoice.first.then { |i| InvoicePdfGenerator.new(i).generate }
+```
+
+---
+
+## Next Steps
+
+1. **Start Rails server** and test the application
+2. **Configure Stripe** when API keys are available
+3. **Add RSpec tests** for models and controllers
+4. **Deploy** to production environment

@@ -2760,3 +2760,856 @@ DEPRECATION WARNING: resource received a hash argument only. Please use a keywor
 DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
 DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
 DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+Started GET "/" for ::1 at 2025-12-15 15:08:02 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (2.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Invoiceforge'*/[0m
+DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+Processing by DashboardController#index as HTML
+Completed 401 Unauthorized in 8ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-12-15 15:08:03 +0800
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/devise.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/devise-4.9.4/app/views/devise/sessions/new.html.erb within layouts/devise
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/devise-4.9.4/app/views/devise/shared/_links.html.erb (Duration: 1.1ms | GC: 0.0ms)
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/devise-4.9.4/app/views/devise/sessions/new.html.erb within layouts/devise (Duration: 11.1ms | GC: 0.0ms)
+  Rendered layout layouts/devise.html.erb (Duration: 13.5ms | GC: 0.0ms)
+Completed 200 OK in 130ms (Views: 27.9ms | ActiveRecord: 22.4ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/favicon.ico" for ::1 at 2025-12-15 15:08:04 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+Started POST "/users/sign_in" for ::1 at 2025-12-15 15:08:37 +0800
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"authenticity_token" => "VrdQrfeP3HoilegSEYLQtwMp159LZMqW1wh52xD5-NwDZFo7PkcM96nXDBDBGT7YzL96XA8bdv8qpaxir4QjQg", "user" => {"email" => "admin@invoiceforge.app", "password" => "password123", "remember_me" => "1"}, "commit" => "Log in"}
+  [1m[36mUser Load (3.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = 'admin@invoiceforge.app' ORDER BY "users"."id" ASC LIMIT 1 /*action='create',application='Invoiceforge',controller='sessions'*/[0m
+Redirected to http://localhost:3000/
+Completed 303 See Other in 326ms (ActiveRecord: 3.7ms (1 query, 0 cached) | GC: 0.6ms)
+
+
+Started GET "/" for ::1 at 2025-12-15 15:08:37 +0800
+Processing by DashboardController#index as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  [1m[36mInvoice Sum (2.7ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" IN ('pending', 'overdue') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:27:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (1.0ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2025-11-30 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:32:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.6ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2024-12-31 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:37:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.9ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:46:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:47:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Load (2.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mClient Load (1.4ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."updated_at" DESC LIMIT 10 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mCACHE Client Load (0.0ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5)[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:83:in 'DashboardController#build_recent_activity'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 21.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 71.2ms | GC: 0.0ms)
+Completed 200 OK in 208ms (Views: 74.0ms | ActiveRecord: 18.1ms (11 queries, 0 cached) | GC: 2.2ms)
+
+
+Started GET "/" for ::1 at 2025-12-15 15:08:39 +0800
+Processing by DashboardController#index as HTML
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  [1m[36mInvoice Sum (0.7ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" IN ('pending', 'overdue') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:27:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.7ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2025-11-30 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:32:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.5ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2024-12-31 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:37:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.7ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:46:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:47:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."updated_at" DESC LIMIT 10 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mCACHE Client Load (0.0ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5)[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:83:in 'DashboardController#build_recent_activity'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 3.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 12.0ms | GC: 0.0ms)
+Completed 200 OK in 107ms (Views: 15.8ms | ActiveRecord: 6.3ms (11 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/invoices/8/edit" for ::1 at 2025-12-15 15:08:48 +0800
+Processing by InvoicesController#edit as HTML
+  Parameters: {"id" => "8"}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.8ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."id" = 8 LIMIT 1 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:172:in 'InvoicesController#set_invoice'
+  [1m[36mClient Load (0.7ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:172:in 'InvoicesController#set_invoice'
+  [1m[36mLineItem Load (1.5ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 8 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:172:in 'InvoicesController#set_invoice'
+  [1m[36mLineItem Load (0.8ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 8 ORDER BY "line_items"."position" ASC /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:210:in 'Enumerable#map'
+  [1m[36mClient Load (0.9ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."name" ASC /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:65:in 'Enumerable#map'
+Completed 200 OK in 76ms (Views: 1.7ms | ActiveRecord: 8.5ms (6 queries, 0 cached) | GC: 0.5ms)
+
+
+Started GET "/invoices" for ::1 at 2025-12-15 15:09:14 +0800
+Processing by InvoicesController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.9ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mClient Load (0.7ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" IN (8, 7, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+Completed 200 OK in 28ms (Views: 2.4ms | ActiveRecord: 3.3ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/clients" for ::1 at 2025-12-15 15:09:34 +0800
+Processing by ClientsController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  [1m[36mClient Load (0.8ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."name" ASC /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/controllers/clients_controller.rb:10:in 'Enumerable#map'
+  [1m[36mInvoice Sum (1.0ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."client_id" = 4 AND "invoices"."status" = 'paid' /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:30:in 'Client#total_billed'
+  [1m[36mInvoice Maximum (1.4ms)[0m  [1m[34mSELECT MAX("invoices"."issue_date") FROM "invoices" WHERE "invoices"."client_id" = 4 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:35:in 'Client#last_invoice_date'
+  [1m[36mInvoice Count (0.7ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."client_id" = 4 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:40:in 'Client#invoice_count'
+  [1m[36mInvoice Sum (0.7ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."client_id" = 6 AND "invoices"."status" = 'paid' /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:30:in 'Client#total_billed'
+  [1m[36mInvoice Maximum (0.8ms)[0m  [1m[34mSELECT MAX("invoices"."issue_date") FROM "invoices" WHERE "invoices"."client_id" = 6 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:35:in 'Client#last_invoice_date'
+  [1m[36mInvoice Count (0.9ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."client_id" = 6 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:40:in 'Client#invoice_count'
+  [1m[36mInvoice Sum (0.5ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."client_id" = 5 AND "invoices"."status" = 'paid' /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:30:in 'Client#total_billed'
+  [1m[36mInvoice Maximum (0.6ms)[0m  [1m[34mSELECT MAX("invoices"."issue_date") FROM "invoices" WHERE "invoices"."client_id" = 5 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:35:in 'Client#last_invoice_date'
+  [1m[36mInvoice Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."client_id" = 5 /*action='index',application='Invoiceforge',controller='clients'*/[0m
+  ↳ app/models/client.rb:40:in 'Client#invoice_count'
+Completed 200 OK in 54ms (Views: 0.8ms | ActiveRecord: 8.5ms (11 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/invoices" for ::1 at 2025-12-15 15:09:45 +0800
+Processing by InvoicesController#index as HTML
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" IN (8, 7, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+Completed 200 OK in 26ms (Views: 0.8ms | ActiveRecord: 2.8ms (4 queries, 0 cached) | GC: 0.2ms)
+
+
+Started GET "/invoices/inv_004/edit" for ::1 at 2025-12-15 15:10:01 +0800
+Processing by InvoicesController#edit as HTML
+  Parameters: {"id" => "inv_004"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."id" = NULL LIMIT 1 /*action='edit',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:172:in 'InvoicesController#set_invoice'
+Completed 404 Not Found in 13ms (ActiveRecord: 1.6ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActiveRecord::RecordNotFound (Couldn't find Invoice with 'id'="inv_004"):
+  
+app/controllers/invoices_controller.rb:172:in 'InvoicesController#set_invoice'
+Started GET "/invoices" for ::1 at 2025-12-15 15:10:36 +0800
+Processing by InvoicesController#index as HTML
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mLineItem Load (0.6ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" IN (8, 7, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.0ms | GC: 0.0ms)
+Completed 200 OK in 29ms (Views: 10.3ms | ActiveRecord: 2.5ms (4 queries, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/dashboard" for ::1 at 2025-12-15 15:10:41 +0800
+Processing by DashboardController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  [1m[36mInvoice Sum (0.9ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" IN ('pending', 'overdue') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:27:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.9ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2025-11-30 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:32:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.6ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'paid' AND "invoices"."updated_at" BETWEEN '2024-12-31 16:00:00' AND '2025-12-31 15:59:59.999999' /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:37:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Sum (0.9ms)[0m  [1m[34mSELECT SUM("invoices"."total") FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:46:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Count (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "invoices" WHERE "invoices"."status" = 'pending' AND (due_date < '2025-12-15') /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:47:in 'DashboardController#calculate_metrics'
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:11:in 'Enumerable#map'
+  [1m[36mInvoice Load (0.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."updated_at" DESC LIMIT 10 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mCACHE Client Load (0.0ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5)[0m
+  ↳ app/controllers/dashboard_controller.rb:72:in 'DashboardController#build_recent_activity'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."created_at" DESC LIMIT 5 /*action='index',application='Invoiceforge',controller='dashboard'*/[0m
+  ↳ app/controllers/dashboard_controller.rb:83:in 'DashboardController#build_recent_activity'
+Completed 200 OK in 61ms (Views: 0.6ms | ActiveRecord: 8.5ms (11 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/invoices/new" for ::1 at 2025-12-15 15:10:52 +0800
+Processing by InvoicesController#new as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='new',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mClient Load (0.9ms)[0m  [1m[34mSELECT "clients".* FROM "clients" ORDER BY "clients"."name" ASC /*action='new',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:28:in 'Enumerable#map'
+  [1m[36mInvoice Load (20.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE (invoice_number LIKE 'INV-2025-%') ORDER BY "invoices"."invoice_number" DESC LIMIT 1 /*action='new',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:251:in 'InvoicesController#generate_invoice_number'
+Completed 200 OK in 49ms (Views: 7.9ms | ActiveRecord: 22.4ms (3 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/invoices" for ::1 at 2025-12-15 15:10:57 +0800
+Processing by InvoicesController#index as HTML
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  [1m[36mInvoice Load (0.8ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" ORDER BY "invoices"."created_at" DESC /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mClient Load (0.8ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" IN (4, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" IN (8, 7, 6, 5) /*action='index',application='Invoiceforge',controller='invoices'*/[0m
+  ↳ app/controllers/invoices_controller.rb:16:in 'Enumerable#map'
+Completed 200 OK in 48ms (Views: 2.7ms | ActiveRecord: 3.3ms (4 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/i/:token" for ::1 at 2025-12-15 15:11:30 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => ":token"}
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = ':token' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 0.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.6ms | GC: 0.0ms)
+Completed 404 Not Found in 39ms (Views: 20.9ms | ActiveRecord: 1.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+  [1m[36mInvoice Pluck (8.7ms)[0m  [1m[34mSELECT "invoices"."invoice_number", "invoices"."token", "invoices"."status" FROM "invoices" LIMIT 3 /*application='Invoiceforge'*/[0m
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:16:48 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (4.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (1.7ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (1.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (1.6ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (2.3ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 1.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 12.5ms | GC: 0.2ms)
+Completed 200 OK in 111ms (Views: 20.1ms | ActiveRecord: 23.0ms (5 queries, 0 cached) | GC: 0.5ms)
+
+
+Started GET "/.well-known/appspecific/com.chrome.devtools.json" for ::1 at 2025-12-15 15:17:09 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/.well-known/appspecific/com.chrome.devtools.json"):
+  
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:20:02 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (2.9ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (3.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.8ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 0.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 30.3ms | GC: 0.0ms)
+Completed 200 OK in 103ms (Views: 47.3ms | ActiveRecord: 5.9ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/.well-known/appspecific/com.chrome.devtools.json" for ::1 at 2025-12-15 15:20:02 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/.well-known/appspecific/com.chrome.devtools.json"):
+  
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:20:28 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (1.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (0.8ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.9ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (1.2ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (1.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 1.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 17.0ms | GC: 0.0ms)
+Completed 200 OK in 75ms (Views: 28.6ms | ActiveRecord: 6.3ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/.well-known/appspecific/com.chrome.devtools.json" for ::1 at 2025-12-15 15:20:28 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/.well-known/appspecific/com.chrome.devtools.json"):
+  
+Started POST "/pay/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:21:21 +0800
+Processing by PaymentsController#create_checkout as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+Can't verify CSRF token authenticity.
+Completed 422 Unprocessable Content in 1ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+  
+ActionController::InvalidAuthenticityToken (Can't verify CSRF token authenticity.):
+  
+actionpack (8.1.1) lib/action_controller/metal/request_forgery_protection.rb:321:in 'ActionController::RequestForgeryProtection::ProtectionMethods::Exception#handle_unverified_request'
+actionpack (8.1.1) lib/action_controller/metal/request_forgery_protection.rb:415:in 'ActionController::RequestForgeryProtection#handle_unverified_request'
+devise (4.9.4) lib/devise/controllers/helpers.rb:257:in 'Devise::Controllers::Helpers#handle_unverified_request'
+actionpack (8.1.1) lib/action_controller/metal/request_forgery_protection.rb:404:in 'ActionController::RequestForgeryProtection#verify_authenticity_token'
+activesupport (8.1.1) lib/active_support/callbacks.rb:362:in 'block in ActiveSupport::Callbacks::CallTemplate::MethodCall#make_lambda'
+activesupport (8.1.1) lib/active_support/callbacks.rb:179:in 'block in ActiveSupport::Callbacks::Filters::Before#call'
+actionpack (8.1.1) lib/abstract_controller/callbacks.rb:36:in 'block (2 levels) in <module:Callbacks>'
+activesupport (8.1.1) lib/active_support/callbacks.rb:180:in 'ActiveSupport::Callbacks::Filters::Before#call'
+activesupport (8.1.1) lib/active_support/callbacks.rb:560:in 'block in ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (8.1.1) lib/active_support/callbacks.rb:560:in 'Array#each'
+activesupport (8.1.1) lib/active_support/callbacks.rb:560:in 'ActiveSupport::Callbacks::CallbackSequence#invoke_before'
+activesupport (8.1.1) lib/active_support/callbacks.rb:109:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (8.1.1) lib/abstract_controller/callbacks.rb:266:in 'AbstractController::Callbacks#process_action'
+actionpack (8.1.1) lib/action_controller/metal/rescue.rb:36:in 'ActionController::Rescue#process_action'
+actionpack (8.1.1) lib/action_controller/metal/instrumentation.rb:76:in 'block in ActionController::Instrumentation#process_action'
+activesupport (8.1.1) lib/active_support/notifications.rb:210:in 'block in ActiveSupport::Notifications.instrument'
+activesupport (8.1.1) lib/active_support/notifications/instrumenter.rb:58:in 'ActiveSupport::Notifications::Instrumenter#instrument'
+activesupport (8.1.1) lib/active_support/notifications.rb:210:in 'ActiveSupport::Notifications.instrument'
+actionpack (8.1.1) lib/action_controller/metal/instrumentation.rb:75:in 'ActionController::Instrumentation#process_action'
+actionpack (8.1.1) lib/action_controller/metal/params_wrapper.rb:259:in 'ActionController::ParamsWrapper#process_action'
+activerecord (8.1.1) lib/active_record/railties/controller_runtime.rb:39:in 'ActiveRecord::Railties::ControllerRuntime#process_action'
+actionpack (8.1.1) lib/abstract_controller/base.rb:154:in 'AbstractController::Base#process'
+actionview (8.1.1) lib/action_view/rendering.rb:40:in 'ActionView::Rendering#process'
+actionpack (8.1.1) lib/action_controller/metal.rb:252:in 'ActionController::Metal#dispatch'
+actionpack (8.1.1) lib/action_controller/metal.rb:335:in 'ActionController::Metal.dispatch'
+actionpack (8.1.1) lib/action_dispatch/routing/route_set.rb:65:in 'ActionDispatch::Routing::RouteSet::Dispatcher#dispatch'
+actionpack (8.1.1) lib/action_dispatch/routing/route_set.rb:50:in 'ActionDispatch::Routing::RouteSet::Dispatcher#serve'
+actionpack (8.1.1) lib/action_dispatch/journey/router.rb:35:in 'block in ActionDispatch::Journey::Router#serve'
+actionpack (8.1.1) lib/action_dispatch/journey/router.rb:86:in 'block in ActionDispatch::Journey::Router#recognize'
+actionpack (8.1.1) lib/action_dispatch/journey/router.rb:66:in 'Array#each'
+actionpack (8.1.1) lib/action_dispatch/journey/router.rb:66:in 'ActionDispatch::Journey::Router#recognize'
+actionpack (8.1.1) lib/action_dispatch/journey/router.rb:31:in 'ActionDispatch::Journey::Router#serve'
+actionpack (8.1.1) lib/action_dispatch/routing/route_set.rb:906:in 'ActionDispatch::Routing::RouteSet#call'
+railties (8.1.1) lib/rails/engine/lazy_route_set.rb:60:in 'Rails::Engine::LazyRouteSet#call'
+inertia_rails (3.15.0) lib/inertia_rails/middleware.rb:21:in 'InertiaRails::Middleware::InertiaRailsRequest#response'
+inertia_rails (3.15.0) lib/inertia_rails/middleware.rb:10:in 'InertiaRails::Middleware#call'
+warden (1.2.9) lib/warden/manager.rb:36:in 'block in Warden::Manager#call'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Kernel#catch'
+warden (1.2.9) lib/warden/manager.rb:34:in 'Warden::Manager#call'
+rack (3.2.4) lib/rack/tempfile_reaper.rb:20:in 'Rack::TempfileReaper#call'
+rack (3.2.4) lib/rack/etag.rb:29:in 'Rack::ETag#call'
+rack (3.2.4) lib/rack/conditional_get.rb:44:in 'Rack::ConditionalGet#call'
+rack (3.2.4) lib/rack/head.rb:15:in 'Rack::Head#call'
+actionpack (8.1.1) lib/action_dispatch/http/content_security_policy.rb:38:in 'ActionDispatch::ContentSecurityPolicy::Middleware#call'
+rack-session (2.1.1) lib/rack/session/abstract/id.rb:274:in 'Rack::Session::Abstract::Persisted#context'
+rack-session (2.1.1) lib/rack/session/abstract/id.rb:268:in 'Rack::Session::Abstract::Persisted#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/cookies.rb:708:in 'ActionDispatch::Cookies#call'
+activerecord (8.1.1) lib/active_record/migration.rb:671:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/callbacks.rb:31:in 'block in ActionDispatch::Callbacks#call'
+activesupport (8.1.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (8.1.1) lib/action_dispatch/middleware/callbacks.rb:30:in 'ActionDispatch::Callbacks#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/executor.rb:20:in 'ActionDispatch::Executor#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in 'ActionDispatch::DebugExceptions#call'
+web-console (4.2.1) lib/web_console/middleware.rb:132:in 'WebConsole::Middleware#call_app'
+web-console (4.2.1) lib/web_console/middleware.rb:28:in 'block in WebConsole::Middleware#call'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in 'Kernel#catch'
+web-console (4.2.1) lib/web_console/middleware.rb:17:in 'WebConsole::Middleware#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in 'ActionDispatch::ShowExceptions#call'
+railties (8.1.1) lib/rails/rack/logger.rb:41:in 'Rails::Rack::Logger#call_app'
+railties (8.1.1) lib/rails/rack/logger.rb:29:in 'Rails::Rack::Logger#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/remote_ip.rb:98:in 'ActionDispatch::RemoteIp#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/request_id.rb:34:in 'ActionDispatch::RequestId#call'
+rack (3.2.4) lib/rack/method_override.rb:28:in 'Rack::MethodOverride#call'
+rack (3.2.4) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (8.1.1) lib/active_support/cache/strategy/local_cache_middleware.rb:30:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/executor.rb:20:in 'ActionDispatch::Executor#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/static.rb:27:in 'ActionDispatch::Static#call'
+rack (3.2.4) lib/rack/sendfile.rb:131:in 'Rack::Sendfile#call'
+actionpack (8.1.1) lib/action_dispatch/middleware/host_authorization.rb:143:in 'ActionDispatch::HostAuthorization#call'
+vite_ruby (3.9.2) lib/vite_ruby/dev_server_proxy.rb:22:in 'ViteRuby::DevServerProxy#perform_request'
+rack-proxy (0.7.7) lib/rack/proxy.rb:87:in 'Rack::Proxy#call'
+railties (8.1.1) lib/rails/engine.rb:534:in 'Rails::Engine#call'
+puma (6.6.1) lib/puma/configuration.rb:279:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (6.6.1) lib/puma/request.rb:99:in 'block in Puma::Request#handle_request'
+puma (6.6.1) lib/puma/thread_pool.rb:390:in 'Puma::ThreadPool#with_force_shutdown'
+puma (6.6.1) lib/puma/request.rb:98:in 'Puma::Request#handle_request'
+puma (6.6.1) lib/puma/server.rb:472:in 'Puma::Server#process_client'
+puma (6.6.1) lib/puma/server.rb:254:in 'block in Puma::Server#run'
+puma (6.6.1) lib/puma/thread_pool.rb:167:in 'block in Puma::ThreadPool#spawn_thread'
+Started POST "/pay/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:24:50 +0800
+DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+Processing by PaymentsController#create_checkout as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:10:in 'PaymentsController#create_checkout'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:26:in 'PaymentsController#create_checkout'
+Redirected to https://checkout.stripe.com/c/pay/cs_test_a1LjtV6fxIhccArhtNwVayBm48AQFkTCkBT7tG77R1KgzEq0ddFl1RJ42s#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VmBTR0NUN3Z2NURjY21ISj1sQUtSVm82R1Z9X1VddUBSM39hf3F9R2RJcGJSMEBoNk82fH8zVFR3Y3VCd2M2bUxCRnA1c0RHVj1hcEJcaUlBfzdOYnBCNTV9VkJjNVJSYCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl
+Completed 302 Found in 988ms (ActiveRecord: 13.3ms (2 queries, 0 cached) | GC: 1.6ms)
+
+
+Started GET "/pay/Ehx6D1YYqIITBQo9i0NRUw/success" for ::1 at 2025-12-15 15:26:32 +0800
+Processing by PaymentsController#success as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:50:in 'PaymentsController#success'
+Redirected to http://localhost:3000/i/Ehx6D1YYqIITBQo9i0NRUw
+Completed 302 Found in 12ms (ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:26:32 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.4ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 1.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.2ms | GC: 0.0ms)
+Completed 200 OK in 115ms (Views: 61.2ms | ActiveRecord: 8.3ms (5 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/favicon.ico" for ::1 at 2025-12-15 15:26:32 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+Started POST "/pay/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:26:59 +0800
+Processing by PaymentsController#create_checkout as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:10:in 'PaymentsController#create_checkout'
+  [1m[36mClient Load (0.7ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:26:in 'PaymentsController#create_checkout'
+Redirected to https://checkout.stripe.com/c/pay/cs_test_a1ifLZXxlI80T0UTglEVutZeRlV7TAnq8LGHyLrmhsWa3mMGUpdwj1gR8M#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VmBTR0NUN3Z2NURjY21ISj1sQUtSVm82R1Z9X1VddUBSM39hf3F9R2RJcGJSMEBoNk82fH8zVFR3Y3VCd2M2bUxCRnA1c0RHVj1hcEJcaUlBfzdOYnBCNTV9VkJjNVJSYCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl
+Completed 302 Found in 459ms (ActiveRecord: 1.3ms (2 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/pay/Ehx6D1YYqIITBQo9i0NRUw/success" for ::1 at 2025-12-15 15:27:33 +0800
+Processing by PaymentsController#success as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:50:in 'PaymentsController#success'
+Redirected to http://localhost:3000/i/Ehx6D1YYqIITBQo9i0NRUw
+Completed 302 Found in 3ms (ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:27:33 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (0.7ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.6ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 0.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.2ms | GC: 0.0ms)
+Completed 200 OK in 31ms (Views: 13.8ms | ActiveRecord: 3.4ms (5 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/pay/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:29:20 +0800
+Processing by PaymentsController#create_checkout as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.6ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:10:in 'PaymentsController#create_checkout'
+  [1m[36mClient Load (0.5ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:26:in 'PaymentsController#create_checkout'
+Redirected to https://checkout.stripe.com/c/pay/cs_test_a1CjJ9quvGjaEgstkYfDx2hwMjblYMwXsbp8hBPhYAROL24BGHcZLgIn9C#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VmBTR0NUN3Z2NURjY21ISj1sQUtSVm82R1Z9X1VddUBSM39hf3F9R2RJcGJSMEBoNk82fH8zVFR3Y3VCd2M2bUxCRnA1c0RHVj1hcEJcaUlBfzdOYnBCNTV9VkJjNVJSYCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl
+Completed 302 Found in 457ms (ActiveRecord: 1.1ms (2 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/pay/Ehx6D1YYqIITBQo9i0NRUw/success" for ::1 at 2025-12-15 15:31:10 +0800
+Processing by PaymentsController#success as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:50:in 'PaymentsController#success'
+Redirected to http://localhost:3000/i/Ehx6D1YYqIITBQo9i0NRUw
+Completed 302 Found in 3ms (ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:31:10 +0800
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (0.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 0.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.3ms | GC: 0.0ms)
+Completed 200 OK in 24ms (Views: 11.9ms | ActiveRecord: 3.2ms (5 queries, 0 cached) | GC: 0.1ms)
+
+
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:36:25 +0800
+DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <top (required)> at /home/project/invoiceforge/config/routes.rb:6)
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (5.3ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mClient Load (1.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (1.8ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (1.4ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 1.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.3ms | GC: 0.0ms)
+Completed 200 OK in 180ms (Views: 34.7ms | ActiveRecord: 25.2ms (5 queries, 0 cached) | GC: 1.1ms)
+
+
+Started GET "/favicon.ico" for ::1 at 2025-12-15 15:36:26 +0800
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+Started POST "/pay/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:36:31 +0800
+Processing by PaymentsController#create_checkout as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.8ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:10:in 'PaymentsController#create_checkout'
+  [1m[36mClient Load (0.6ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 LIMIT 1 /*action='create_checkout',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:26:in 'PaymentsController#create_checkout'
+Redirected to https://checkout.stripe.com/c/pay/cs_test_a1hweka0VY6690FJfCilnB3oRsGUwCVJs3uWfgwDgeyj0iwU15jnOvSyXD#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0VmBTR0NUN3Z2NURjY21ISj1sQUtSVm82R1Z9X1VddUBSM39hf3F9R2RJcGJSMEBoNk82fH8zVFR3Y3VCd2M2bUxCRnA1c0RHVj1hcEJcaUlBfzdOYnBCNTV9VkJjNVJSYCcpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl
+Completed 302 Found in 472ms (ActiveRecord: 1.4ms (2 queries, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/pay/Ehx6D1YYqIITBQo9i0NRUw/success" for ::1 at 2025-12-15 15:37:01 +0800
+Processing by PaymentsController#success as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+  [1m[36mInvoice Load (0.7ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/controllers/payments_controller.rb:51:in 'PaymentsController#success'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/models/invoice.rb:84:in 'Invoice#mark_paid!'
+  [1m[36mInvoice Exists? (6.7ms)[0m  [1m[34mSELECT 1 AS one FROM "invoices" WHERE LOWER("invoices"."invoice_number") = LOWER('2025-0001') AND "invoices"."id" != 5 LIMIT 1 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/models/invoice.rb:84:in 'Invoice#mark_paid!'
+  [1m[36mInvoice Update (1.0ms)[0m  [1m[33mUPDATE "invoices" SET "status" = 'paid', "updated_at" = '2025-12-15 07:37:02.468021' WHERE "invoices"."id" = 5 /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/models/invoice.rb:84:in 'Invoice#mark_paid!'
+  [1m[36mTRANSACTION (47.4ms)[0m  [1m[35mCOMMIT /*action='success',application='Invoiceforge',controller='payments'*/[0m
+  ↳ app/models/invoice.rb:84:in 'Invoice#mark_paid!'
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: bc5deb28-366a-4512-bb6f-898662f30283) to Async(default) with arguments: "InvoiceMailer", "payment_received", "deliver_now", {args: [#<GlobalID:0x00007e01c626d658 @uri=#<URI::GID gid://invoiceforge/Invoice/5>>]}
+Invoice 2025-0001 marked as paid via success redirect
+Redirected to http://localhost:3000/i/Ehx6D1YYqIITBQo9i0NRUw
+Completed 302 Found in 814ms (ActiveRecord: 73.4ms (3 queries, 0 cached) | GC: 6.3ms)
+
+
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   [1m[36mInvoice Load (2.5ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."id" = 5 LIMIT 1 /*application='Invoiceforge'*/[0m
+Started GET "/i/Ehx6D1YYqIITBQo9i0NRUw" for ::1 at 2025-12-15 15:37:02 +0800
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283] Performing ActionMailer::MailDeliveryJob (Job ID: bc5deb28-366a-4512-bb6f-898662f30283) from Async(default) enqueued at 2025-12-15T07:37:02.793512128Z with arguments: "InvoiceMailer", "payment_received", "deliver_now", {args: [#<GlobalID:0x00007e01c62bdc98 @uri=#<URI::GID gid://invoiceforge/Invoice/5>>]}
+Processing by PublicInvoicesController#show as HTML
+  Parameters: {"token" => "Ehx6D1YYqIITBQo9i0NRUw"}
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   [1m[36mClient Load (4.2ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 LIMIT 1 /*application='Invoiceforge',job='ActionMailer%3A%3AMailDeliveryJob'*/[0m
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   ↳ app/mailers/invoice_mailer.rb:41:in 'InvoiceMailer#payment_received'
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendering layout layouts/mailer.html.erb
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendering invoice_mailer/payment_received.html.erb within layouts/mailer
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendered invoice_mailer/payment_received.html.erb within layouts/mailer (Duration: 8.7ms | GC: 0.0ms)
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendered layout layouts/mailer.html.erb (Duration: 9.6ms | GC: 0.0ms)
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendering layout layouts/mailer.text.erb
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendering invoice_mailer/payment_received.text.erb within layouts/mailer
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendered invoice_mailer/payment_received.text.erb within layouts/mailer (Duration: 1.8ms | GC: 0.0ms)
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283]   Rendered layout layouts/mailer.text.erb (Duration: 3.5ms | GC: 0.0ms)
+  [1m[36mInvoice Load (23.0ms)[0m  [1m[34mSELECT "invoices".* FROM "invoices" WHERE "invoices"."token" = 'Ehx6D1YYqIITBQo9i0NRUw' LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283] InvoiceMailer#payment_received: processed outbound mail in 161.9ms
+  [1m[36mClient Load (4.8ms)[0m  [1m[34mSELECT "clients".* FROM "clients" WHERE "clients"."id" = 4 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (2.7ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:8:in 'PublicInvoicesController#show'
+  [1m[36mLineItem Load (37.3ms)[0m  [1m[34mSELECT "line_items".* FROM "line_items" WHERE "line_items"."invoice_id" = 5 ORDER BY "line_items"."position" ASC /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/public_invoices_controller.rb:71:in 'Enumerable#map'
+  [1m[36mUser Load (2.5ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = 1 ORDER BY "users"."id" ASC LIMIT 1 /*action='show',application='Invoiceforge',controller='public_invoices'*/[0m
+  ↳ app/controllers/application_controller.rb:20:in 'block in <class:ApplicationController>'
+  Rendering layout layouts/application.html.erb
+  Rendering /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application
+  Rendered /home/pete/.local/share/mise/installs/ruby/3.4.7/lib/ruby/gems/3.4.0/gems/inertia_rails-3.15.0/app/views/inertia.html.erb within layouts/application (Duration: 1.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.6ms | GC: 0.0ms)
+Completed 200 OK in 260ms (Views: 17.5ms | ActiveRecord: 97.6ms (5 queries, 0 cached) | GC: 12.4ms)
+
+
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283] Delivered mail 693fba9f7a34_7642c42e8330ad@pop-os.mail (630.8ms)
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283] Date: Mon, 15 Dec 2025 15:37:03 +0800
+From: noreply@invoiceforge.app
+To: billing@acme.corp
+Message-ID: <693fba9f7a34_7642c42e8330ad@pop-os.mail>
+Subject: Payment Received: Invoice 2025-0001
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_693fba9eee98c_7642c42e8329ee";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_693fba9eee98c_7642c42e8329ee
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+InvoiceForge
+
+Payment Received - Thank You!
+
+Dear Acme Corporation,
+
+We have received your payment for invoice 2025-0001.
+
+Invoice Number: 2025-0001
+Amount Paid: S$6,080.00
+Status: PAID
+
+Thank you for your timely payment. We appreciate your business!
+
+If you have any questions, please don't hesitate to contact us.
+
+
+--
+This email was sent by InvoiceForge
+=C2=A9 2025 InvoiceForge. All rights reserved.
+
+----==_mimepart_693fba9eee98c_7642c42e8329ee
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!-- BEGIN app/views/layouts/mailer.html.erb
+--><!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf=
+-8">
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scal=
+e=3D1.0">
+    <style>
+      /* Reset styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot=
+o, 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #1e293b;
+        background-color: #f1f5f9;
+      }
+      =
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+      =
+
+      .card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      =
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      =
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1e293b;
+        text-decoration: none;
+      }
+      =
+
+      h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 20px 0;
+      }
+      =
+
+      p {
+        margin: 0 0 16px 0;
+        color: #475569;
+      }
+      =
+
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #3b82f6;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin: 20px 0;
+      }
+      =
+
+      .button:hover {
+        background-color: #2563eb;
+      }
+      =
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+        color: #94a3b8;
+        font-size: 14px;
+      }
+      =
+
+      .amount {
+        font-size: 32px;
+        font-weight: bold;
+        color: #1e293b;
+        margin: 20px 0;
+      }
+      =
+
+      .meta {
+        background-color: #f8fafc;
+        padding: 16px;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+      =
+
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      =
+
+      .meta-label {
+        color: #64748b;
+      }
+      =
+
+      .meta-value {
+        font-weight: 600;
+        color: #1e293b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class=3D"container">
+      <div class=3D"card">
+        <div class=3D"header">
+          <a href=3D"#" class=3D"logo">INVOICEFORGE</a>
+        </div>
+        =
+
+        <!-- BEGIN app/views/invoice_mailer/payment_received.html.erb
+--><h1>Payment Received - Thank You!</h1>
+
+<p>Dear Acme Corporation,</p>
+
+<p>We have received your payment for invoice <strong>2025-0001</strong>.<=
+/p>
+
+<div class=3D"meta">
+  <div class=3D"meta-row">
+    <span class=3D"meta-label">Invoice Number:</span>
+    <span class=3D"meta-value">2025-0001</span>
+  </div>
+  <div class=3D"meta-row">
+    <span class=3D"meta-label">Amount Paid:</span>
+    <span class=3D"meta-value" style=3D"color: #22c55e;">S$6,080.00</span=
+>
+  </div>
+  <div class=3D"meta-row">
+    <span class=3D"meta-label">Status:</span>
+    <span class=3D"meta-value" style=3D"color: #22c55e;">PAID</span>
+  </div>
+</div>
+
+<p>Thank you for your timely payment. We appreciate your business!</p>
+
+<p>If you have any questions, please don't hesitate to contact us.</p>
+<!-- END app/views/invoice_mailer/payment_received.html.erb -->
+        =
+
+        <div class=3D"footer">
+          <p>This email was sent by InvoiceForge</p>
+          <p>=C2=A9 2025 InvoiceForge. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<!-- END app/views/layouts/mailer.html.erb -->=
+
+----==_mimepart_693fba9eee98c_7642c42e8329ee--
+
+[ActiveJob] [ActionMailer::MailDeliveryJob] [bc5deb28-366a-4512-bb6f-898662f30283] Performed ActionMailer::MailDeliveryJob (Job ID: bc5deb28-366a-4512-bb6f-898662f30283) from Async(default) in 825.22ms

@@ -12,16 +12,16 @@ InvoiceForge is a **meticulously designed, single-user invoicing SPA** built on 
 
 **Current State:** 
 - Phase 1 (Frontend Design & Prototyping): **COMPLETE** ✅
-- Phase 2 (Backend Integration): **IN PROGRESS** ⚙️
+- Phase 2 (Backend Integration): **COMPLETE** ✅
 
 **Completed in Phase 2:**
 - PostgreSQL v16 database with Docker
 - Devise authentication (User model)
 - ActiveRecord models (Client, Invoice, LineItem)
 - Real data integration (Dashboard, Clients, Invoices)
-- Email templates (InvoiceMailer)
-
-**Remaining in Phase 2:** PDF Generation, Stripe Integration
+- Email templates + wiring (InvoiceMailer)
+- PDF Generation (Prawn)
+- Stripe Checkout Integration
 
 ---
 
