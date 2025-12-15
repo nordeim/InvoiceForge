@@ -1,0 +1,147 @@
+# Phase 2 Remaining Work Implementation Plan
+
+## Executive Summary
+
+After deep analysis of the codebase, here's the assessment:
+
+| Task | Effort | Complexity | Status |
+|------|--------|------------|--------|
+| **InvoicesController** | Low | Simple | 90% complete - just minor cleanup |
+| **Email Wiring** | Medium | Simple | Mailer/templates exist, needs wiring |
+| **Stripe Integration** | High | Complex | Requires API key, new backend code |
+
+**Recommended Execution Order:**
+1. InvoicesController completion (15 min)
+2. Email Wiring (30 min)
+3. Stripe Integration (2-3 hours, requires user config)
+
+---
+
+## 1. InvoicesController Completion
+
+### Current State
+The [InvoicesController](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#2-307) is **almost complete**. All actions exist:
+- ✅ [index](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#5-22), [new](file:///home/project/invoiceforge/app/controllers/clients_controller.rb#19-23), [create](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#33-53), [show](file:///home/project/invoiceforge/app/controllers/clients_controller.rb#14-18), [edit](file:///home/project/invoiceforge/app/controllers/clients_controller.rb#38-44), [update](file:///home/project/invoiceforge/app/controllers/clients_controller.rb#45-56), [destroy](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#87-92)
+- ✅ [duplicate](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#93-117), [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126), [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135), [cancel](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#136-144), [download_pdf](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#145-155)
+
+### Remaining Work
+Minor improvements only:
+
+| Fix | File | Description |
+|-----|------|-------------|
+| Use model methods | [invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb) | Call [mark_sent!](file:///home/project/invoiceforge/app/models/invoice.rb#77-81), [mark_paid!](file:///home/project/invoiceforge/app/models/invoice.rb#82-86) instead of raw [update](file:///home/project/invoiceforge/app/controllers/clients_controller.rb#45-56) |
+| Add send_invoice action | [invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb) | Action to send invoice email (wires up later) |
+
+---
+
+## 2. Email Wiring
+
+### Current State
+- ✅ [InvoiceMailer](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#2-49) exists with 3 methods: [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24), [payment_reminder](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#25-37), [payment_received](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#38-48)
+- ✅ HTML and text templates exist for all 3 email types
+- ✅ PDF attachment logic built into [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24)
+
+### Remaining Work
+Wire mailer calls to controller actions:
+
+| Trigger | Action | Email Method |
+|---------|--------|--------------|
+| User clicks "Send Invoice" | [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135) → `pending` | `InvoiceMailer.send_invoice` |
+| Invoice marked as paid | [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) → [paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) | `InvoiceMailer.payment_received` |
+| Cron job (future) | Overdue detection | `InvoiceMailer.payment_reminder` |
+
+### Files to Modify
+1. **InvoicesController** - Add email sending after status changes
+2. **routes.rb** - Add [send](file:///home/project/invoiceforge/app/models/invoice.rb#67-71) action (optional, can reuse [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135))
+
+---
+
+## 3. Stripe Integration
+
+### Current State
+- ✅ Mock [PaymentModal](file:///home/project/invoiceforge/app/frontend/components/public-invoice/PaymentModal.tsx#23-147) exists (frontend)
+- ⚠️ `stripe` gem is commented out in Gemfile
+- ❌ No backend payment processing
+
+### Architecture Decision
+
+> **⚠️ IMPORTANT: Stripe API Key Required**
+> The user must provide Stripe API keys before implementation:
+> - `STRIPE_PUBLISHABLE_KEY` (frontend)
+> - `STRIPE_SECRET_KEY` (backend)
+> - `STRIPE_WEBHOOK_SECRET` (webhooks)
+
+### Implementation Approach
+
+**Option A: Stripe Checkout (Recommended - Simpler)**
+- Redirect to Stripe-hosted payment page
+- Minimal frontend changes
+- Stripe handles PCI compliance
+
+**Option B: Stripe Elements (Current Mock)**
+- Custom payment form in modal
+- More control over UI
+- Requires more backend work
+
+### Files to Create/Modify
+
+| File | Action | Description |
+|------|--------|-------------|
+| [Gemfile](file:///home/project/invoiceforge/Gemfile) | Modify | Uncomment `stripe` gem |
+| `config/initializers/stripe.rb` | Create | Configure Stripe keys |
+| `app/controllers/payments_controller.rb` | Create | Handle Stripe checkout/webhook |
+| [config/routes.rb](file:///home/project/invoiceforge/config/routes.rb) | Modify | Add payment routes |
+| [PaymentModal.tsx](file:///home/project/invoiceforge/app/frontend/components/public-invoice/PaymentModal.tsx) | Modify | Use real Stripe Elements or redirect |
+
+### Webhook Required
+Stripe sends payment status via webhooks. Need endpoint:
+- `POST /webhooks/stripe` → Update invoice status to [paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126)
+
+---
+
+## Implementation Phases
+
+### Phase A: Quick Wins (45 min)
+1. Clean up InvoicesController (use model methods)
+2. Wire email sending to [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135) action
+3. Wire email sending to [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) action
+
+### Phase B: Stripe Setup (requires user input)
+1. User provides Stripe API keys
+2. Uncomment and install `stripe` gem
+3. Create Stripe initializer
+4. Create PaymentsController with Checkout Session
+5. Add webhook endpoint
+6. Update PaymentModal to redirect or use Elements
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Stripe Integration requires configuration:**
+> 1. Do you have a Stripe account with API keys?
+> 2. Which approach do you prefer?
+>    - **Stripe Checkout** (redirect to Stripe, simpler)
+>    - **Stripe Elements** (custom form, more work)
+> 3. Should I proceed with Phase A (Quick Wins) first while you set up Stripe?
+
+---
+
+## Verification Plan
+
+### Phase A Verification
+```bash
+# Test email sending
+source .env && bin/rails console
+invoice = Invoice.pending.first
+InvoiceMailer.send_invoice(invoice).deliver_now
+# Check letter_opener in browser
+```
+
+### Phase B Verification
+1. Start dev server
+2. Navigate to public invoice `/i/:token`
+3. Click Pay button
+4. Complete Stripe test payment (use 4242 4242 4242 4242)
+5. Verify webhook updates invoice status

@@ -1,0 +1,167 @@
+# Stripe Integration Implementation Plan
+
+## Overview
+Integrate Stripe Checkout for invoice payments. Using **Checkout Sessions** (redirect to Stripe) for simplicity and PCI compliance.
+
+---
+
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant R as Rails
+    participant S as Stripe
+    
+    U->>F: Click "Pay Invoice"
+    F->>R: POST /payments/checkout
+    R->>S: Create Checkout Session
+    S-->>R: Session URL
+    R-->>F: Redirect URL
+    F->>S: Redirect to Stripe
+    U->>S: Complete Payment
+    S->>R: Webhook: payment_intent.succeeded
+    R->>R: Mark invoice as paid
+    S->>F: Redirect to success_url
+```
+
+---
+
+## Required Keys
+
+| Key | Value | Status |
+|-----|-------|--------|
+| `STRIPE_PUBLISHABLE_KEY` | `pk_test_51SeVBFQ2ss0...` | ✅ Provided |
+| `STRIPE_SECRET_KEY` | `sk_test_...` | ❌ **Needed** |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` | ❌ Create in Stripe Dashboard |
+
+---
+
+## Files to Create/Modify
+
+### Backend
+
+#### [NEW] `config/initializers/stripe.rb`
+Configure Stripe with API key from environment.
+
+#### [NEW] `app/controllers/payments_controller.rb`
+- `create_checkout` - Create Stripe Checkout Session
+- `success` - Handle successful payment redirect
+- `cancel` - Handle cancelled payment
+- `webhook` - Handle Stripe webhook events
+
+#### [MODIFY] `config/routes.rb`
+Add payment routes.
+
+#### [MODIFY] `Gemfile`
+Uncomment `stripe` gem.
+
+#### [MODIFY] `.env.docker`
+Add Stripe environment variables.
+
+### Frontend
+
+#### [MODIFY] `PublicInvoice/Show.tsx`
+Replace mock PaymentModal with redirect to Stripe Checkout.
+
+---
+
+## Detailed Changes
+
+### 1. Gemfile
+```ruby
+gem 'stripe', '~> 10.0'  # Uncomment this line
+```
+
+### 2. Stripe Initializer
+```ruby
+# config/initializers/stripe.rb
+Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+```
+
+### 3. PaymentsController
+```ruby
+class PaymentsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:webhook]
+  skip_before_action :verify_authenticity_token, only: [:webhook]
+
+  def create_checkout
+    invoice = Invoice.find_by!(token: params[:token])
+    
+    session = Stripe::Checkout::Session.create(
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'sgd',
+          product_data: { name: "Invoice #{invoice.invoice_number}" },
+          unit_amount: (invoice.total * 100).to_i
+        },
+        quantity: 1
+      }],
+      mode: 'payment',
+      success_url: "#{root_url}i/#{invoice.token}?paid=true",
+      cancel_url: "#{root_url}i/#{invoice.token}?cancelled=true",
+      metadata: { invoice_token: invoice.token }
+    )
+    
+    redirect_to session.url, allow_other_host: true
+  end
+
+  def webhook
+    payload = request.body.read
+    sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+    
+    event = Stripe::Webhook.construct_event(
+      payload, sig_header, ENV['STRIPE_WEBHOOK_SECRET']
+    )
+    
+    if event['type'] == 'checkout.session.completed'
+      session = event['data']['object']
+      invoice = Invoice.find_by!(token: session['metadata']['invoice_token'])
+      invoice.mark_paid!
+      InvoiceMailer.payment_received(invoice).deliver_later
+    end
+    
+    head :ok
+  end
+end
+```
+
+### 4. Routes
+```ruby
+# Payment routes (public)
+post 'pay/:token', to: 'payments#create_checkout', as: :pay_invoice
+post 'webhooks/stripe', to: 'payments#webhook'
+```
+
+### 5. Frontend Update
+Replace PaymentModal with direct link to `/pay/:token`.
+
+---
+
+## Verification Plan
+
+### Test Payment Flow
+1. Start dev server
+2. Navigate to public invoice `/i/:token`
+3. Click "Pay" button
+4. Complete payment with test card `4242 4242 4242 4242`
+5. Verify redirect to success URL
+6. Verify invoice status changed to `paid`
+
+### Test Webhook (Stripe CLI)
+```bash
+stripe listen --forward-to localhost:3000/webhooks/stripe
+```
+
+---
+
+## User Action Required
+
+> [!IMPORTANT]
+> Please provide the Stripe **Secret Key** (`sk_test_...`) to proceed.
+> 
+> Also, you'll need to configure a webhook in Stripe Dashboard:
+> - URL: `https://your-domain.com/webhooks/stripe`
+> - Events: `checkout.session.completed`

@@ -1,0 +1,111 @@
+# PDF Generation Implementation Plan
+
+## Goal
+Implement invoice PDF download functionality for both authenticated users and public invoice viewers.
+
+---
+
+## Current State Analysis
+
+### ✅ Already Implemented
+| Component | Status | Location |
+|-----------|--------|----------|
+| **Prawn gems** | ✅ Installed | [Gemfile](file:///home/project/invoiceforge/Gemfile) (prawn ~> 2.4, prawn-table ~> 0.2) |
+| **InvoicePdfGenerator** | ✅ Created | [app/services/invoice_pdf_generator.rb](file:///home/project/invoiceforge/app/services/invoice_pdf_generator.rb) (258 lines) |
+| **Controller action** | ✅ Created | `InvoicesController#download_pdf` |
+| **Route** | ✅ Created | `GET /invoices/:id/download_pdf` |
+
+### ❌ Not Yet Implemented
+| Component | Required |
+|-----------|----------|
+| **Public PDF route** | Add `GET /i/:token/download` for public access |
+| **Frontend buttons** | Wire up Download buttons in Invoice pages |
+| **Testing** | Verify PDF generation works end-to-end |
+
+---
+
+## Proposed Changes
+
+### 1. Backend: Add Public PDF Download Route
+
+#### [MODIFY] [routes.rb](file:///home/project/invoiceforge/config/routes.rb)
+Add public PDF download route that doesn't require authentication:
+```ruby
+get "i/:token/download", to: "public_invoices#download_pdf", as: :public_invoice_download
+```
+
+#### [MODIFY] [public_invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/public_invoices_controller.rb)
+Add [download_pdf](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#145-155) action:
+```ruby
+def download_pdf
+  @invoice = Invoice.includes(:client, :line_items).find_by!(token: params[:token])
+  
+  # Don't allow PDF download for draft invoices
+  if @invoice.status == 'draft'
+    redirect_to public_invoice_path(params[:token]), alert: 'Invoice not available'
+    return
+  end
+  
+  generator = InvoicePdfGenerator.new(@invoice)
+  send_data generator.generate,
+            filename: generator.filename,
+            type: 'application/pdf',
+            disposition: 'attachment'
+end
+```
+
+---
+
+### 2. Frontend: Wire Up Download Buttons
+
+#### [MODIFY] [PublicInvoice/Show.tsx](file:///home/project/invoiceforge/app/frontend/pages/PublicInvoice/Show.tsx)
+- Enable the currently disabled "Download PDF" button
+- Add link to `/i/:token/download`
+
+#### [MODIFY] [Invoices/Edit.tsx](file:///home/project/invoiceforge/app/frontend/pages/Invoices/Edit.tsx)
+- Add "Download PDF" button to invoice editor header
+- Link to `/invoices/:id/download_pdf`
+
+#### [MODIFY] [Invoices/Index.tsx](file:///home/project/invoiceforge/app/frontend/pages/Invoices/Index.tsx)
+- Add "Download PDF" option to row actions dropdown
+
+---
+
+## File Summary
+
+| File | Action | Description |
+|------|--------|-------------|
+| [config/routes.rb](file:///home/project/invoiceforge/config/routes.rb) | MODIFY | Add public PDF download route |
+| [app/controllers/public_invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/public_invoices_controller.rb) | MODIFY | Add download_pdf action |
+| [app/frontend/pages/PublicInvoice/Show.tsx](file:///home/project/invoiceforge/app/frontend/pages/PublicInvoice/Show.tsx) | MODIFY | Enable Download button |
+| [app/frontend/pages/Invoices/Edit.tsx](file:///home/project/invoiceforge/app/frontend/pages/Invoices/Edit.tsx) | MODIFY | Add Download button |
+| [app/frontend/pages/Invoices/Index.tsx](file:///home/project/invoiceforge/app/frontend/pages/Invoices/Index.tsx) | MODIFY | Add Download option |
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+# Test PDF generation service
+bin/rails console
+invoice = Invoice.includes(:client, :line_items).last
+generator = InvoicePdfGenerator.new(invoice)
+pdf_data = generator.generate
+File.write("tmp/test_invoice.pdf", pdf_data)
+```
+
+### Manual Verification
+1. Navigate to `/invoices/:id/edit` and click Download PDF
+2. Navigate to `/i/:token` and click Download PDF  
+3. Verify PDF opens correctly with all invoice data
+4. Check PDF includes: invoice number, client info, line items, totals
+
+---
+
+## Design Decisions
+
+1. **Disposition: attachment** - PDF downloads as file, not opens in browser
+2. **Public access allowed** - Anyone with the token can download (matches public view behavior)
+3. **Draft invoices blocked** - Can't download PDF of draft invoices from public URL
+4. **Existing generator** - Use the already-implemented InvoicePdfGenerator service

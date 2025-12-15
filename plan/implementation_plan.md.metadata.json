@@ -1,0 +1,6 @@
+{
+  "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary": "Detailed implementation plan for Stripe Checkout integration: backend PaymentsController, webhook endpoint, frontend redirect, and environment configuration.",
+  "updatedAt": "2025-12-15T06:28:41.020770042Z",
+  "version": "6"
+}

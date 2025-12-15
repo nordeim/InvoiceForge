@@ -1,0 +1,91 @@
+# Phase A: Quick Wins Implementation Plan
+
+## Goal
+Complete InvoicesController cleanup and wire email notifications to invoice actions.
+
+---
+
+## 1. InvoicesController Improvements
+
+### 1.1 Use Model Methods for Status Changes
+
+| Action | Current Code | Improved Code |
+|--------|--------------|---------------|
+| [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135) | `@invoice.update(status: 'pending')` | `@invoice.mark_sent!` |
+| [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) | `@invoice.update(status: 'paid')` | `@invoice.mark_paid!` |
+| [cancel](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#136-144) | `@invoice.update(status: 'cancelled')` | `@invoice.cancel!` |
+
+### 1.2 Add Send Invoice Action
+
+New action that marks as sent AND sends email:
+```ruby
+def send_invoice
+  if @invoice.mark_sent!
+    InvoiceMailer.send_invoice(@invoice).deliver_later
+    redirect_to edit_invoice_path(@invoice), notice: 'Invoice sent successfully.'
+  else
+    redirect_to edit_invoice_path(@invoice), alert: 'Failed to send invoice.'
+  end
+end
+```
+
+---
+
+## 2. Email Wiring
+
+### 2.1 Trigger Points
+
+| Event | Method | Email |
+|-------|--------|-------|
+| Send invoice | [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) action | `InvoiceMailer.send_invoice` |
+| Mark paid | [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) action | `InvoiceMailer.payment_received` |
+
+### 2.2 Background Jobs
+Using `deliver_later` for async email (Active Job):
+- Emails don't block the response
+- Better user experience
+
+---
+
+## Proposed Changes
+
+### [MODIFY] [invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb)
+1. Update [mark_paid](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#118-126) to use model method + send email
+2. Update [mark_sent](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#127-135) to use model method
+3. Add new [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) action with email
+4. Update [cancel](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb#136-144) to use model method
+
+### [MODIFY] [routes.rb](file:///home/project/invoiceforge/config/routes.rb)
+Add [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) route:
+```ruby
+post :send_invoice  # POST /invoices/:id/send_invoice
+```
+
+---
+
+## Verification Plan
+
+### Test Email with letter_opener
+```bash
+# Start dev server with letter_opener
+source .env && foreman start -f Procfile.dev
+
+# In another terminal, send test email
+source .env && bin/rails runner "
+  invoice = Invoice.draft.first
+  invoice.update!(status: 'pending')
+  InvoiceMailer.send_invoice(invoice).deliver_now
+  puts 'Email sent - check browser for letter_opener'
+"
+```
+
+letter_opener opens emails in browser at `http://localhost:3000/letter_opener`
+
+---
+
+## File Summary
+
+| File | Changes |
+|------|---------|
+| [invoices_controller.rb](file:///home/project/invoiceforge/app/controllers/invoices_controller.rb) | Use model methods, add email sending |
+| [routes.rb](file:///home/project/invoiceforge/config/routes.rb) | Add [send_invoice](file:///home/project/invoiceforge/app/mailers/invoice_mailer.rb#4-24) route |
